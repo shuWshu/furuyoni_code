@@ -67,7 +67,3 @@ function outputBoard(){
 }
 // ----- 領域関連 ----- end
 
-// ----- コードテスト -----
-console.log(moveAreaValPoss(distance, dust, 8));
-console.log(moveAreaValPoss(distance, dust, 7));
-outputBoard();

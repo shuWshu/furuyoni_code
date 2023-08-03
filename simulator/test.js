@@ -1,0 +1,31 @@
+outputCard(card_UN1);
+outputCard(card_UN2);
+outputCard(card_UN3);
+outputCard(card_UN4);
+outputCard(card_UN5);
+outputCard(card_UN6);
+outputCard(card_UN7);
+outputCard(card_UN8);
+outputCard(card_UN9);
+outputCard(card_US1);
+outputCard(card_US2);
+outputCard(card_US3);
+outputCard(card_US4);
+outputCard(card_HN1);
+outputCard(card_HN2);
+outputCard(card_HN3);
+outputCard(card_HN4);
+outputCard(card_HN5);
+outputCard(card_HN6);
+outputCard(card_HN7);
+outputCard(card_HN8);
+outputCard(card_HN9);
+outputCard(card_HS1);
+outputCard(card_HS2);
+outputCard(card_HS3);
+outputCard(card_HS4);
+
+// ----- コードテスト -----
+console.log(moveAreaValPoss(distance, dust, 8));
+console.log(moveAreaValPoss(distance, dust, 7));
+outputBoard();

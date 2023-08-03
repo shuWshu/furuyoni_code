@@ -17,8 +17,8 @@ class Card{
         this.text = text; //テキスト string
         if(this.mainType == 0){ //攻撃札のみ
             this.dist = parameter[0]; //適正距離 int[]
-            this.auraDamage = parameter[1]; //オーラダメージ int null可能 "-"は-1で表現
-            this.lifeDamage = parameter[2]; //ライフダメージ int null可能 "-"は-1で表現
+            this.auraDamage = parameter[1]; //オーラダメージ int null可能 "-"は-1で表現 "X"は-2で表現
+            this.lifeDamage = parameter[2]; //ライフダメージ int null可能 "-"は-1で表現 "X"は-2で表現
             count += 3;
         }else{
             this.dist = null;
@@ -66,7 +66,15 @@ function outputCard(card, mono = false){
         else{ cardType += " \x1b[31m攻撃\x1b[0m"; }
         const distMax = Math.max.apply(null, card.dist);
         const distMin = Math.min.apply(null, card.dist); //古めの記法
-        paraData = " " + distMin + "-" + distMax + " " + card.auraDamage + "/" + card.lifeDamage;
+        let dist;
+        if(distMax == distMin){ dist = distMax; }
+        else{ dist = distMin + "-" + distMax; }
+        let Damage = [card.auraDamage, card.lifeDamage];
+        for(let i = 0; i < 2; ++i){
+            if(Damage[i] == -1){ Damage[i] = "-"; }
+            if(Damage[i] == -2){ Damage[i] = "X"; }
+        }
+        paraData = " 適正距離:" + dist + " ダメージ:" + Damage[0] + "/" + Damage[1];
     }else if(card.mainType == 1){
         if(mono){ cardType += " 行動"; }
         else{ cardType += " \x1b[34m行動\x1b[0m"; }
@@ -107,16 +115,16 @@ const card_US1 = new Card(1, "数多ノ刃", 1, "hajimari", 0, "a", 0, 0, "", [[
 const card_US2 = new Card(1, "闇凪ノ声", 2, "hajimari", 0, "a", 1, 0, "カードを2枚引く。", [], 4);
 const card_US3 = new Card(1, "苦ノ外套", 3, "hajimari", 0, "a", 1, 1, "対応した《攻撃》は-2/+0となる。\n相オーラ →2→ ダスト", [], 3);
 const card_US4 = new Card(1, "奪イノ茨", 4, "hajimari", 0, "a", 1, 2, "相手は手札を全て捨て札にし、集中力が0になる。\n再起:ダストが10以上である。", [], 1);
-outputCard(card_UN1);
-outputCard(card_UN2);
-outputCard(card_UN3);
-outputCard(card_UN4);
-outputCard(card_UN5);
-outputCard(card_UN6);
-outputCard(card_UN7);
-outputCard(card_UN8);
-outputCard(card_UN9);
-outputCard(card_US1);
-outputCard(card_US2);
-outputCard(card_US3);
-outputCard(card_US4);
+const card_HN1 = new Card(0, "花弁刃", 1, "hajimari", 0, "b", 0, 0, "", [[4, 5], -1, 1]);
+const card_HN2 = new Card(0, "桜刀", 2, "hajimari", 0, "a", 0, 0, "", [[3, 4], 3, 1]);
+const card_HN3 = new Card(0, "瞬霊式", 3, "hajimari", 0, "a", 0, 0, "対応不可", [[5], 3, 2]);
+const card_HN4 = new Card(0, "返し斬り", 4, "hajimari", 0, "a", 0, 1, "【攻撃後】このカードを対応で使用したならば ダスト →1→ 自オーラ", [[3, 4], 2, 1]);
+const card_HN5 = new Card(0, "歩法", 5, "hajimari", 0, "a", 1, 0, "集中力を1得る。\n間合 ←1→ ダスト", []);
+const card_HN6 = new Card(0, "桜寄せ", 6, "hajimari", 0, "a", 1, 1, "相オーラ →1→ 自オーラ", []);
+const card_HN7 = new Card(0, "光輝収束", 7, "hajimari", 0, "a", 1, 2, "ダスト →2→ 自オーラ\nダスト →1→ 自フレア", []);
+const card_HN8 = new Card(0, "光の刃", 8, "hajimari", 0, "a", 0, 0, "超克\n【常時】Xはあなたのフレアに等しい。", [[3, 4, 5], -2, 1]);
+const card_HN9 = new Card(0, "精霊連携", 9, "hajimari", 0, "a", 2, 2, "【展開中】あなたの《攻撃》は+1/+0となる。", [3]);
+const card_HS1 = new Card(1, "光満ちる一刀", 1, "hajimari", 0, "a", 0, 0, "", [[3, 4], 4, 3], 5);
+const card_HS2 = new Card(1, "花吹雪の景色", 2, "hajimari", 0, "a", 1, 0, "相オーラ →2→ ダスト", [], 4);
+const card_HS3 = new Card(1, "精霊たちの風", 3, "hajimari", 0, "a", 1, 1, "対応した切札でない《攻撃》を打ち消す。\nカードを1枚引く。", [], 3);
+const card_HS4 = new Card(1, "煌めきの乱舞", 4, "hajimari", 0, "a", 0, 0, "即再起:あなたが2以上のライフへのダメージを受ける", [[3, 4, 5], 2, 2], 2);
