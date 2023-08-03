@@ -1,4 +1,4 @@
-// ----- 領域の定義 ----- start
+// ----- 領域関連 ----- start
 // 各領域クラス
 class  Life{
     constructor(){
@@ -37,7 +37,7 @@ class playersArea{
         this.flare = new Flare();
     }
 }
-// 定義
+// 変数定義
 const distance = new Distance();
 const dust = new Dust();
 const areaP0 = new playersArea();
@@ -52,6 +52,28 @@ function chgAreaVal(area, n){
     }
     return area.val;
 }
+// 結晶をn個移動させる関数 A→n→B
+// 返値：移動個数
+function moveAreaVal(areaA, areaB, n){
+    if(chgAreaVal(areaA, -n) == -1){ //失敗した場合
+        return 0;
+    }
+    if(chgAreaVal(areaB, n) == -1){ //失敗した場合
+        chgAreaVal(areaA, n);
+        return 0;
+    }
+    return n;
+}
+// 結晶を「できる限り」n個まで移動させる関数 A→n→B
+// 返値：移動個数
+function moveAreaValPoss(areaA, areaB, n){
+    for(let i = 0; i < n; ++i){ //n回1つづつ移動
+        if(moveAreaVal(areaA, areaB, 1) == 0){
+            return i;
+        }
+    }
+    return n;
+}
 // 表示関数
 function outputBoard(){
     const output = 
@@ -65,13 +87,11 @@ function outputBoard(){
             "\nダスト 　:" + dust.val;
     console.log(output);
 }
-// ----- 領域定義 ----- end
+// ----- 領域関連 ----- end
 
 // -----  -----
 
 // ----- コードテスト -----
-console.log(chgAreaVal(areaP0.flare, 6));
-console.log(chgAreaVal(distance, -3));
-console.log(chgAreaVal(areaP1.aura, 3));
-console.log(chgAreaVal(areaP1.life, -11));
+console.log(moveAreaValPoss(distance, dust, 8));
+console.log(moveAreaValPoss(distance, dust, 7));
 outputBoard();
