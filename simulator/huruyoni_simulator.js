@@ -1,45 +1,23 @@
 // ----- 領域関連 ----- start
-// 各領域クラス
-class  Life{
-    constructor(){
-        this.val = 10;
-        this.max = 100;
+// 領域クラス
+// 現在値(初期値)と最大値を格納
+class Area{
+    constructor(val, max){
+        this.val = val;
+        this.max = max;
     }
 }
-class Aura{
-    constructor(){
-        this.val = 3;
-        this.max = 5;
-    }
-}
-class Flare{
-    constructor(){
-        this.val = 0;
-        this.max = 100;
-    }
-}
-class Distance{
-    constructor(){
-        this.val = 10;
-        this.max = 10;
-    }
-}
-class Dust{
-    constructor(){
-        this.val = 0;
-        this.max = 100;
-    }
-}
+// 個人領域クラス
 class playersArea{
     constructor(){
-        this.life = new Life();
-        this.aura = new Aura();
-        this.flare = new Flare();
+        this.life = new Area(10, 100);
+        this.aura = new Area(3, 5);
+        this.flare = new Area(0, 100);
     }
 }
 // 変数定義
-const distance = new Distance();
-const dust = new Dust();
+const distance = new Area(10, 10);
+const dust = new Area(0, 100);
 const areaP0 = new playersArea();
 const areaP1 = new playersArea();
 // 値を変化させる関数
@@ -88,8 +66,6 @@ function outputBoard(){
     console.log(output);
 }
 // ----- 領域関連 ----- end
-
-// -----  -----
 
 // ----- コードテスト -----
 console.log(moveAreaValPoss(distance, dust, 8));
