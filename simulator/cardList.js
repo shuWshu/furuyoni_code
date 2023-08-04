@@ -59,7 +59,7 @@ function outputCard(card, mono = false){
     let cardNo, cardType, paraData;
     cardNo = "NA_" + ('00' + card.megamiNo).slice(-2) + "_" + card.megami + "_" + card.version.toUpperCase() + "_";
     if(card.class == 0){ cardNo += "N_" + card.num; cardType = "\n 通常札"; }
-    else if(card.class == 0){ cardNo = "S_" + card.num; cardType = "\n 切札"; }
+    else if(card.class == 1){ cardNo += "S_" + card.num; cardType = "\n 切札"; }
 
     if(card.mainType == 0){ 
         if(mono){ cardType += " 攻撃"; }
@@ -101,6 +101,12 @@ function outputCard(card, mono = false){
                    indentTextCard(card.text);
     console.log(output);
 }
+function outputCardList(cardList){
+    cardList.map(function(element){
+        outputCard(element);
+    });
+}
+
 
 const card_UN1 = new Card(0, "投射", 1, "hajimari", 0, "a", 0, 0, "", [[5, 6, 7, 8, 9], 3, 1]);
 const card_UN2 = new Card(0, "脇斬り", 2, "hajimari", 0, "a", 0, 0, "", [[2, 3], 2, 2]);
@@ -116,15 +122,43 @@ const card_US2 = new Card(1, "闇凪ノ声", 2, "hajimari", 0, "a", 1, 0, "カ�
 const card_US3 = new Card(1, "苦ノ外套", 3, "hajimari", 0, "a", 1, 1, "対応した《攻撃》は-2/+0となる。\n相オーラ →2→ ダスト", [], 3);
 const card_US4 = new Card(1, "奪イノ茨", 4, "hajimari", 0, "a", 1, 2, "相手は手札を全て捨て札にし、集中力が0になる。\n再起:ダストが10以上である。", [], 1);
 const card_HN1 = new Card(0, "花弁刃", 1, "hajimari", 0, "b", 0, 0, "", [[4, 5], -1, 1]);
-const card_HN2 = new Card(0, "桜刀", 2, "hajimari", 0, "a", 0, 0, "", [[3, 4], 3, 1]);
-const card_HN3 = new Card(0, "瞬霊式", 3, "hajimari", 0, "a", 0, 0, "対応不可", [[5], 3, 2]);
-const card_HN4 = new Card(0, "返し斬り", 4, "hajimari", 0, "a", 0, 1, "【攻撃後】このカードを対応で使用したならば ダスト →1→ 自オーラ", [[3, 4], 2, 1]);
-const card_HN5 = new Card(0, "歩法", 5, "hajimari", 0, "a", 1, 0, "集中力を1得る。\n間合 ←1→ ダスト", []);
-const card_HN6 = new Card(0, "桜寄せ", 6, "hajimari", 0, "a", 1, 1, "相オーラ →1→ 自オーラ", []);
-const card_HN7 = new Card(0, "光輝収束", 7, "hajimari", 0, "a", 1, 2, "ダスト →2→ 自オーラ\nダスト →1→ 自フレア", []);
-const card_HN8 = new Card(0, "光の刃", 8, "hajimari", 0, "a", 0, 0, "超克\n【常時】Xはあなたのフレアに等しい。", [[3, 4, 5], -2, 1]);
-const card_HN9 = new Card(0, "精霊連携", 9, "hajimari", 0, "a", 2, 2, "【展開中】あなたの《攻撃》は+1/+0となる。", [3]);
-const card_HS1 = new Card(1, "光満ちる一刀", 1, "hajimari", 0, "a", 0, 0, "", [[3, 4], 4, 3], 5);
-const card_HS2 = new Card(1, "花吹雪の景色", 2, "hajimari", 0, "a", 1, 0, "相オーラ →2→ ダスト", [], 4);
-const card_HS3 = new Card(1, "精霊たちの風", 3, "hajimari", 0, "a", 1, 1, "対応した切札でない《攻撃》を打ち消す。\nカードを1枚引く。", [], 3);
-const card_HS4 = new Card(1, "煌めきの乱舞", 4, "hajimari", 0, "a", 0, 0, "即再起:あなたが2以上のライフへのダメージを受ける", [[3, 4, 5], 2, 2], 2);
+const card_HN2 = new Card(0, "桜刀", 2, "hajimari", 0, "b", 0, 0, "", [[3, 4], 3, 1]);
+const card_HN3 = new Card(0, "瞬霊式", 3, "hajimari", 0, "b", 0, 0, "対応不可", [[5], 3, 2]);
+const card_HN4 = new Card(0, "返し斬り", 4, "hajimari", 0, "b", 0, 1, "【攻撃後】このカードを対応で使用したならば ダスト →1→ 自オーラ", [[3, 4], 2, 1]);
+const card_HN5 = new Card(0, "歩法", 5, "hajimari", 0, "b", 1, 0, "集中力を1得る。\n間合 ←1→ ダスト", []);
+const card_HN6 = new Card(0, "桜寄せ", 6, "hajimari", 0, "b", 1, 1, "相オーラ →1→ 自オーラ", []);
+const card_HN7 = new Card(0, "光輝収束", 7, "hajimari", 0, "b", 1, 2, "ダスト →2→ 自オーラ\nダスト →1→ 自フレア", []);
+const card_HN8 = new Card(0, "光の刃", 8, "hajimari", 0, "b", 0, 0, "超克\n【常時】Xはあなたのフレアに等しい。", [[3, 4, 5], -2, 1]);
+const card_HN9 = new Card(0, "精霊連携", 9, "hajimari", 0, "b", 2, 2, "【展開中】あなたの《攻撃》は+1/+0となる。", [3]);
+const card_HS1 = new Card(1, "光満ちる一刀", 1, "hajimari", 0, "b", 0, 0, "", [[3, 4], 4, 3], 5);
+const card_HS2 = new Card(1, "花吹雪の景色", 2, "hajimari", 0, "b", 1, 0, "相オーラ →2→ ダスト", [], 4);
+const card_HS3 = new Card(1, "精霊たちの風", 3, "hajimari", 0, "b", 1, 1, "対応した切札でない《攻撃》を打ち消す。\nカードを1枚引く。", [], 3);
+const card_HS4 = new Card(1, "煌めきの乱舞", 4, "hajimari", 0, "b", 0, 0, "即再起:あなたが2以上のライフへのダメージを受ける", [[3, 4, 5], 2, 2], 2);
+
+const cardList_U = [card_UN1, 
+                    card_UN2, 
+                    card_UN3, 
+                    card_UN4,
+                    card_UN5,
+                    card_UN6,
+                    card_UN7,
+                    card_UN8,
+                    card_UN9,
+                    card_US1,
+                    card_US2,
+                    card_US3,
+                    card_US4];
+
+const cardList_H = [card_HN1, 
+                    card_HN2, 
+                    card_HN3, 
+                    card_HN4,
+                    card_HN5,
+                    card_HN6,
+                    card_HN7,
+                    card_HN8,
+                    card_HN9,
+                    card_HS1,
+                    card_HS2,
+                    card_HS3,
+                    card_HS4];
