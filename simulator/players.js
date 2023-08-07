@@ -1,9 +1,19 @@
 // 各プレイヤー紐付け情報
 class Players{
-    constructor(cardList, life, aura, flare){
+    constructor(life, aura, flare){
         this.vigor = 0; // 集中力
         this.cardListN = []; // 通常札リスト&所在
         this.cardListS = []; // 切札リスト&使用済
+        this.deck = [0, 1, 2, 3, 4, 5, 6]; // 山札順番管理
+        this.discard = []; // 捨札&伏せ札の順番管理
+        this.life = life;
+        this.aura = aura;
+        this.flare = flare;
+    }
+    // カードリストの登録
+    setCardList(cardList){
+        this.cardListN = []; // リセット
+        this.cardListS = []; // リセット
         cardList.forEach((card, i) => {
             if(i < 7){
                 this.cardListN.push([card, 0]); // [カード内容, 場所] 山札:0, 手札:1, 捨札:2, 伏札:3, 付与札:4
@@ -11,11 +21,6 @@ class Players{
                 this.cardListS.push([card, 0]); // [カード内容, 使用状況] 未使用:0, 使用済:1
             }
         });
-        this.deck = [0, 1, 2, 3, 4, 5, 6]; // 山札順番管理
-        this.discard = []; // 捨札&伏せ札の順番管理
-        this.life = life;
-        this.aura = aura;
-        this.flare = flare;
     }
     // 集中力増減
     // 返値: 成功なら変更後値, 失敗なら-1を返す．
@@ -38,6 +43,26 @@ class Players{
         this.discard = [];
         shuffleArray(this.deck);
     }
+    // カードの移動
+    // 引数: カードid, 移動後
+    moveCard(id, area){
+        const prevArea = this.cardListN[id][1];
+        // 移動前
+        if(prevArea == 0){ // 山札
+            const index = this.deck.indexOf(id);
+            this.deck.splice(index, 1);
+        }else if(prevArea == 2 || prevArea == 3){ // 捨伏札にある
+            const index = this.discard.indexOf(id);
+            this.discard.splice(index, 1);
+        }
+        // 移動後
+        if(area == 0){ // 山札
+            this.deck.push(id);
+        }else if(area == 2 || area == 3){ // 捨伏札にある
+            this.discard.push(id);
+        }
+        this.cardListN[id][1] = area;
+    }
 }
 // シャッフル関数
 function shuffleArray(arr) {
@@ -56,7 +81,7 @@ function outputPlayersCard(players, player_name = ""){
     deckText += "\n";
 
     let handText = "手札(順序無): ";
-    players.deck.forEach(element => {
+    players.cardListN.forEach(element => {
         if(element[1] == 1){ handText += element[0].name + ", "; }
     });
     handText += "\n";
@@ -90,5 +115,7 @@ function outputBothCard(){
     outputPlayersCard(players_1, "プレイヤー1");
 }
 
-const players_0 = new Players(cardList_U, life_0, aura_0, flare_0);
-const players_1 = new Players(cardList_H, life_1, aura_1, flare_1);
+const players_0 = new Players(life_0, aura_0, flare_0);
+players_0.setCardList(cardList_U);
+const players_1 = new Players(life_1, aura_1, flare_1);
+players_1.setCardList(cardList_H)
