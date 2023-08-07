@@ -45,7 +45,7 @@ class Players{
     }
     // カードの移動
     // 引数: カードid, 移動後
-    moveCard(id, area){
+    moveCardN(id, area){
         const prevArea = this.cardListN[id][1];
         // 移動前
         if(prevArea == 0){ // 山札
@@ -62,6 +62,12 @@ class Players{
             this.discard.push(id);
         }
         this.cardListN[id][1] = area;
+    }
+    // 切札状態変更
+    // 引数: カードid, 状態
+    chgCardS(id, state = -1){
+        if(state == -1){ this.cardListS[id][1] = (this.cardListS[id][1] + 1) % 2; }
+        else{ this.cardListS[id][1] = state; }
     }
 }
 // シャッフル関数
