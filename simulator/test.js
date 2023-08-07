@@ -5,4 +5,8 @@ console.log(moveAreaValPoss(distance, dust, 8));
 console.log(moveAreaValPoss(distance, dust, 7));
 outputBoard();
 
-console.log(Players_0.cardListN);
+outputBothCard();
+players_0.reshuffle();
+outputBothCard();
+players_0.reshuffle();
+outputBothCard();
