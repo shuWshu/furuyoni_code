@@ -4,3 +4,5 @@ outputCardList(cardList_H);
 console.log(moveAreaValPoss(distance, dust, 8));
 console.log(moveAreaValPoss(distance, dust, 7));
 outputBoard();
+
+console.log(Players_0.cardListN);

@@ -7,19 +7,15 @@ class Area{
         this.max = max;
     }
 }
-// 個人領域クラス
-class playersArea{
-    constructor(){
-        this.life = new Area(10, 100);
-        this.aura = new Area(3, 5);
-        this.flare = new Area(0, 100);
-    }
-}
 // 変数定義
 const distance = new Area(10, 10);
 const dust = new Area(0, 100);
-const areaP0 = new playersArea();
-const areaP1 = new playersArea();
+const life_0 = new Area(10, 100);
+const aura_0 = new Area(3, 5);
+const flare_0 = new Area(0, 100);
+const life_1 = new Area(10, 100);
+const aura_1 = new Area(3, 5);
+const flare_1 = new Area(0, 100);
 // 値を変化させる関数
 // 返値：成功なら変更後の値，失敗なら-1
 function chgAreaVal(area, n){
@@ -55,12 +51,12 @@ function moveAreaValPoss(areaA, areaB, n){
 // 表示関数
 function outputBoard(){
     const output = 
-            "P0 ライフ:" + areaP0.life.val +
-            "\nP0 オーラ:" + areaP0.aura.val +
-            "\nP0 フレア:" + areaP0.flare.val +
-            "\nP1 ライフ:" + areaP1.life.val +
-            "\nP1 オーラ:" + areaP1.aura.val +
-            "\nP1 フレア:" + areaP1.flare.val +
+            "P0 ライフ:" + life_0.val +
+            "\nP0 オーラ:" + aura_0.val +
+            "\nP0 フレア:" + flare_0.val +
+            "\nP1 ライフ:" + life_1.val +
+            "\nP1 オーラ:" + aura_1.val +
+            "\nP1 フレア:" + flare_1.val +
             "\n間合 　　:" + distance.val +
             "\nダスト 　:" + dust.val;
     console.log(output);

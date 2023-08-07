@@ -139,30 +139,14 @@ const card_HS2 = new Card(1, "花吹雪の景色", 2, "hajimari", 0, "b", 1, 0, 
 const card_HS3 = new Card(1, "精霊たちの風", 3, "hajimari", 0, "b", 1, 1, "対応した切札でない《攻撃》を打ち消す。\nカードを1枚引く。", [], 3);
 const card_HS4 = new Card(1, "煌めきの乱舞", 4, "hajimari", 0, "b", 0, 0, "即再起:あなたが2以上のライフへのダメージを受ける", [[3, 4, 5], 2, 2], 2);
 
-const cardList_U = [card_UN1, 
-                    card_UN2, 
-                    card_UN3, 
-                    card_UN4,
-                    card_UN5,
-                    card_UN6,
-                    card_UN7,
-                    card_UN8,
-                    card_UN9,
-                    card_US1,
-                    card_US2,
-                    card_US3,
-                    card_US4];
+const cardPool_U = [card_UN1, card_UN2, card_UN3, card_UN4, card_UN5, card_UN6, card_UN7, card_UN8, card_UN9,
+                    card_US1, card_US2, card_US3, card_US4];
 
-const cardList_H = [card_HN1, 
-                    card_HN2, 
-                    card_HN3, 
-                    card_HN4,
-                    card_HN5,
-                    card_HN6,
-                    card_HN7,
-                    card_HN8,
-                    card_HN9,
-                    card_HS1,
-                    card_HS2,
-                    card_HS3,
-                    card_HS4];
+const cardList_U = [card_UN1, card_UN2, card_UN3, card_UN4, card_UN5, card_UN6, card_UN7,
+                    card_US1, card_US2, card_US3];
+
+const cardPool_H = [card_HN1, card_HN2, card_HN3, card_HN4, card_HN5, card_HN6, card_HN7, card_HN8, card_HN9,
+                    card_HS1, card_HS2, card_HS3, card_HS4];
+
+const cardList_H = [card_HN1, card_HN2, card_HN3, card_HN4, card_HN5, card_HN6, card_HN7,
+                    card_HS1, card_HS2, card_HS3];
