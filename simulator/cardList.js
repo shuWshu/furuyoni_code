@@ -35,6 +35,10 @@ class Card{
         }else{
             this.cost = null;
         }
+
+        this.cardNo = "NA_" + ('00' + this.megamiNo).slice(-2) + "_" + this.megami + "_" + this.version.toUpperCase() + "_";
+        if(this.class == 0){ this.cardNo += "N_" + this.num;}
+        else if(this.class == 1){ this.cardNo += "S_" + this.num;}
     }
 }
 // n字インデントを下げる関数
