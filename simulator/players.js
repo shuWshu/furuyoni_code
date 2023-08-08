@@ -69,6 +69,14 @@ class Players{
         if(state == -1){ this.cardListS[id][1] = (this.cardListS[id][1] + 1) % 2; }
         else{ this.cardListS[id][1] = state; }
     }
+    // ドロー処理
+    // 返値: 成功なら引いたカードid, 失敗なら-1
+    draw(){
+        const drawn = this.deck.pop();
+        if(drawn == undefined){ return -1; }
+        this.cardListN[drawn][1] = 1;
+        return drawn;
+    }
 }
 // シャッフル関数
 function shuffleArray(arr) {
@@ -81,7 +89,7 @@ function shuffleArray(arr) {
 // 各領域カード表示
 function outputPlayersCard(players, player_name = ""){
     let deckText = "山札(上　下): ";
-    players.deck.forEach(id => {
+    players.deck.slice().reverse().forEach(id => { // 配列の逆順処理
         deckText += players.cardListN[id][0].name + ", "
     });
     deckText += "\n";
