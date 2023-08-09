@@ -1,4 +1,11 @@
+// ダメージ処理
+// 引数: 領域, 値
+function damage(area, n){
+    
+}
+
 // 開始フェイズ処理
+// 引数: 対象プレイヤー, 再構成の有無
 function startPhase(players, reshuffle = false){
     // 集中+1
     players.chgVigor(1);
