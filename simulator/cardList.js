@@ -5,7 +5,6 @@ class Card{
     // 行動:[]
     // 付与:[納]
     constructor(Class, name, num, megami, megamiNo, version, mainType, subType, text, parameter, cost = 0){
-        let count = 0
         this.class = Class; //通常:0, 切札:1
         this.name = name; //カード名 string
         this.num = num; //カードナンバー int
@@ -19,7 +18,6 @@ class Card{
             this.dist = parameter[0]; //適正距離 int[]
             this.auraDamage = parameter[1]; //オーラダメージ int null可能 "-"は-1で表現 "X"は-2で表現
             this.lifeDamage = parameter[2]; //ライフダメージ int null可能 "-"は-1で表現 "X"は-2で表現
-            count += 3;
         }else{
             this.dist = null;
             this.auraDamage = null;

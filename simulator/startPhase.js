@@ -1,7 +1,14 @@
 // ダメージ処理
-// 引数: 領域, 値
-function damage(area, n){
-    
+// 引数: プレイヤー, 領域(文字列), 値
+function damage(players, area, n){
+    if(area == "life"){
+        return moveAreaValPoss(players[area], players.flare, n);
+    }else if(area == "aura"){
+        return moveAreaVal(players[area], dust, n);
+    }else if(area == "flare"){
+        return moveAreaVal(players[area], dust, n);
+    }
+    return -1;
 }
 
 // 開始フェイズ処理
@@ -15,7 +22,7 @@ function startPhase(players, reshuffle = false){
     // 再構成
     if(reshuffle){
         console.log("再構成");
-        moveAreaValPoss(players.life, players.flare, 1); // TODO:ダメージに置き換え
+        damage(players, "life", 1);
         players.reshuffle();
     }
     // カードを2枚引く

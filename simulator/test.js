@@ -1,5 +1,9 @@
+startPhase(players_0);
+outputPlayersCard(players_0);
 outputBoard();
-chgAreaVal(life_0, -20);
-chgAreaVal(aura_0, -20);
-chgAreaVal(flare_0, -20);
+startPhase(players_0);
+outputPlayersCard(players_0);
+outputBoard();
+startPhase(players_0, true);
+outputPlayersCard(players_0);
 outputBoard();

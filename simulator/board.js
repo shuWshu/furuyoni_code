@@ -2,30 +2,25 @@
 // 領域クラス
 // 現在値(初期値)と最大値を格納
 class Area{
-    constructor(val, max, minus = false){
+    constructor(val, max){
         this.val = val;
         this.max = max;
-        this.minus = minus; // 負の値を取りうるか
     }
 }
 // 変数定義
 const distance = new Area(10, 10);
 const dust = new Area(0, 100);
-const life_0 = new Area(10, 100, minus = true);
+const life_0 = new Area(10, 100);
 const aura_0 = new Area(3, 5);
 const flare_0 = new Area(0, 100);
-const life_1 = new Area(10, 100, minus = true);
+const life_1 = new Area(10, 100);
 const aura_1 = new Area(3, 5);
 const flare_1 = new Area(0, 100);
 // 値を変化させる関数
 // 返値：成功なら変更後の値，失敗なら-1
 function chgAreaVal(area, n){
     area.val += n;
-    if(area.val < 0 && !area.minus){
-        area.val -= n;
-        return -1;
-    }
-    if(area.val > area.max){
+    if(area.val < 0 || area.val > area.max){
         area.val -= n;
         return -1;
     }
