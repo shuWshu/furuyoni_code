@@ -64,7 +64,7 @@ class Players{
         this.cardListN[id][1] = area;
     }
     // 切札状態変更
-    // 引数: カードid, 状態
+    // 引数: カードid, 状態(-1なら逆にする, 0or1で指定)
     chgCardS(id, state = -1){
         if(state == -1){ this.cardListS[id][1] = (this.cardListS[id][1] + 1) % 2; }
         else{ this.cardListS[id][1] = state; }

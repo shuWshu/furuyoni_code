@@ -8,14 +8,12 @@ function endPhase(players){
 
     while(handList.length > 2){ // 手札3枚以上
         let handText = "伏せる札を選択 ";
-        let count = 0; // 選択番号
         handList.forEach(id => {
-            handText += count + ":" + players.cardListN[id][0].name + " ";
-            count += 1;
+            handText += id + ":" + players.cardListN[id][0].name + " ";
         });
         handText += "\n";
         console.log(handText);
-        
+
         while(true){ // 選択中止まる
             // TODO:選択操作実装
             let index = 0; // 削除インデックス
