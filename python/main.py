@@ -3,6 +3,8 @@ import cardList
 import player as pl
 import commonProcess as cp
 
+import cardFunc # テスト用
+
 # ---------- 関数定義 ----------
 # ----- ゲームの流れ -----
 # 開始フェイズ
@@ -90,7 +92,7 @@ if __name__ == "__main__":
     bd.outputBoard(areas)
     pl.outputPlayerCard(player_0)
 
-    startPhase(player_0)
+    cardFunc.Hohou(player_0, player_1, areas)
 
     bd.outputBoard(areas)
     pl.outputPlayerCard(player_0)
