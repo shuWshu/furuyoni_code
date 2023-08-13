@@ -8,7 +8,10 @@ import player as pl
 # 引数: プレイヤー, ダスト領域, 領域(文字列), 値
 def damage(player, area, n):
     if(area == "life"):
-        return board.moveAreaValPoss(player.life, player.flare, n)
+        ret = board.moveAreaValPoss(player.life, player.flare, n)
+        if(player.life.val <= 0):
+            return lose(player)
+        return ret
     elif(area == "aura"):
         return board.moveAreaVal(player.aura, dust, n)
     elif(area == "flare"):
@@ -103,6 +106,10 @@ def mainPhase(player):
         elif orderIndex == 3: # ターンエンド
             print(tokens)
             break
+# 敗北処理
+# TODO:ちゃんと作る
+def lose(player): 
+    print("lose")
 
 # ----- 定義 -----
 # 領域定義
@@ -134,6 +141,9 @@ if __name__ == "__main__":
     pl.outputPlayerCard(player_0)
 
     mainPhase(player_0)
+
+    damage(player_0, "life", 6)
+    damage(player_0, "life", 6)
 
     board.outputBoard(gameBoard)
     pl.outputPlayerCard(player_0)

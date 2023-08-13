@@ -1,24 +1,43 @@
-import board
-import cardList
-import player
+class Area:
+    def __init__(self, val, max_val):
+        self._val = val
+        self._max = max_val
+        self.func = None
 
-# 領域定義
-distance = board.Area(10, 10)
-dust = board.Area(0, 100)
-life_0 = board.Area(10, 100)
-aura_0 = board.Area(3, 5)
-flare_0 = board.Area(0, 100)
-life_1 = board.Area(10, 100)
-aura_1 = board.Area(3, 5)
-flare_1 = board.Area(0, 100)
-gameBoard = [life_0, aura_0, flare_0, life_1, aura_1, flare_1, distance, dust]
+    def setFunc(self, func):
+        self.func = func
 
-# プレイヤー定義
-player_0 = player.Player(life_0, aura_0, flare_0)
-player_0.setCardList(cardList.cardList_U)
-player_1 = player.Player(life_1, aura_1, flare_1)
-player_1.setCardList(cardList.cardList_H)
-players = [player_0, player_1]
+    @property
+    def val(self):
+        return self._val
+    @val.setter
+    def val(self, new_val):
+        self._val = new_val
+        if self.func:
+            self.func()
 
-board.outputBoard(gameBoard)
-player.outputPlayersCard(players)
+class Player:
+    def __init__(self, life, aura, flare):
+        self.vigor = 0
+        self.cardListN = []
+        self.cardListS = []
+        self.deck = [0, 1, 2, 3, 4, 5, 6]
+        self.hand = []
+        self.discard = []
+        self._life = Area(life, life)
+
+    @property
+    def life(self):
+        return self._life
+
+def test():
+    print("test")
+
+# テスト
+life = Area(5, 10)
+life.setFunc(test)
+player = Player(life, aura=0, flare=0)
+print("初期 life:", player.life.val)
+player.life.val = 8
+print("変更後 life:", player.life.val)
+player.life.val = 15  # 範囲外の値をセットしようとするとエラーが表示される
