@@ -1,3 +1,5 @@
+import cardFunc
+
 # クラス定義
 class Card:
     # parameterはカードタイプによって変化

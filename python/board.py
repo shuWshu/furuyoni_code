@@ -35,31 +35,33 @@ def moveAreaValPoss(areaA, areaB, n):
 
 # 表示関数
 # 引数: [P0ライフ, P0オーラ, P0フレア, P1ライフ, P1オーラ, P1フレア, 間合, ダスト]
-def outputBoard(board):
-    output = f"""P0 ライフ:{board[0].val}
-P0 オーラ:{board[1].val}
-P0 フレア:{board[2].val}
-P1 ライフ:{board[3].val}
-P1 オーラ:{board[4].val}
-P1 フレア:{board[5].val}
-間合 　　:{board[6].val}
-ダスト 　:{board[7].val}"""
+def outputBoard(areas):
+    output = f"""P0 ライフ:{areas.life_0.val}
+P0 オーラ:{areas.aura_0.val}
+P0 フレア:{areas.flare_0.val}
+P1 ライフ:{areas.life_1.val}
+P1 オーラ:{areas.aura_1.val}
+P1 フレア:{areas.flare_1.val}
+間合 　　:{areas.distance.val}
+ダスト 　:{areas.dust.val}"""
     print(output)
+
+class Areas:
+    def __init__(self) -> None:
+        self.distance = Area(10, 10)
+        self.dust = Area(0, 100)
+        self.life_0 = Area(10, 100)
+        self.aura_0 = Area(3, 5)
+        self.flare_0 = Area(0, 100)
+        self.life_1 = Area(10, 100)
+        self.aura_1 = Area(3, 5)
+        self.flare_1 = Area(0, 100)
 
 # テスト
 if __name__ == "__main__":
     # 変数定義例
-    distance = Area(10, 10)
-    dust = Area(0, 100)
-    life_0 = Area(10, 100)
-    aura_0 = Area(3, 5)
-    flare_0 = Area(0, 100)
-    life_1 = Area(10, 100)
-    aura_1 = Area(3, 5)
-    flare_1 = Area(0, 100)
+    areas = Areas()
 
-    board = [life_0, aura_0, flare_0, life_1, aura_1, flare_1, distance, dust]
-
-    outputBoard(board)
-    print(moveAreaValPoss(distance, dust, 13))
-    outputBoard(board)
+    outputBoard(areas)
+    print(moveAreaValPoss(areas.distance, areas.dust, 13))
+    outputBoard(areas)

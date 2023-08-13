@@ -5,7 +5,8 @@ import cardList
 
 # 各プレイヤー紐付け情報
 class Player:
-    def __init__(self, life, aura, flare):
+    def __init__(self, name, life, aura, flare):
+        self.name = name # プレイヤー名
         self.vigor = 0 # 集中力
         self.cardListN = [] # 通常札リスト&所在
         self.cardListS = [] # 切札リスト&使用済
@@ -81,7 +82,7 @@ class Player:
         return drawn
 
 # 各領域カード表示
-def outputPlayerCard(player, player_name = ""):
+def outputPlayerCard(player):
     deckText = "山札(上　下): "
     for id in player.deck:
         deckText += player.cardListN[id][0].name + ", "
@@ -112,21 +113,21 @@ def outputPlayerCard(player, player_name = ""):
     unusedText += "\n"
 
     nameText = ""
-    if(player_name):
-        nameText += player_name + "\n"
+    if(player.name):
+        nameText += player.name + "\n"
     output = nameText + deckText + handText + discText + laidText + unusedText + usedText
     print(output)
 
 # 各プレイヤーカード表示
-def outputPlayersCard(players, playersName = ["プレイヤー0", "プレイヤー1"]):
-    outputPlayerCard(players[0], playersName[0])
-    outputPlayerCard(players[1], playersName[1])
+def outputPlayersCard(players):
+    outputPlayerCard(players[0])
+    outputPlayerCard(players[1])
 
 # テスト
 if __name__ == "__main__":
     # プレイヤー定義
-    player_0 = Player(board.life_0, board.aura_0, board.flare_0)
+    player_0 = Player("プレイヤー0", board.life_0, board.aura_0, board.flare_0)
     player_0.setCardList(cardList.cardList_U)
-    player_1 = Player(board.life_1, board.aura_1, board.flare_1)
+    player_1 = Player("プレイヤー1", board.life_1, board.aura_1, board.flare_1)
     player_1.setCardList(cardList.cardList_H)
     players = [player_0, player_1]
