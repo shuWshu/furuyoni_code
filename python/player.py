@@ -10,6 +10,7 @@ class Player:
         self.cardListN = [] # 通常札リスト&所在
         self.cardListS = [] # 切札リスト&使用済
         self.deck = [0, 1, 2, 3, 4, 5, 6] # 山札順番管理
+        self.hand = [] # 手札管理
         self.discard = [] # 捨札&伏せ札の順番管理
         self.life = life
         self.aura = aura
@@ -48,12 +49,17 @@ class Player:
         if(prevArea == 0): # 山札
             index = self.deck.index(id) 
             self.deck.pop(index) # 山札リストから削除
+        elif(prevArea == 1): # 手札
+            index = self.hand.index(id) 
+            self.hand.pop(index) 
         elif(prevArea == 2 or prevArea == 3): # 捨伏札にある
             index = self.discard.index(id)
             self.discard.pop(index) # 捨伏リストから削除
         # 移動後
         if(area == 0): # 山札
             self.deck.append(id) # 山札リストへ追加
+        elif(area == 1): # 山札
+            self.hand.append(id) # 山札リストへ追加
         elif(area == 2 or area == 3): # 捨伏札にある
             self.discard.append(id) # 捨伏リストへ追加
         self.cardListN[id][1] = area
@@ -71,6 +77,7 @@ class Player:
             return -1
         drawn = self.deck.pop(0)
         self.cardListN[drawn][1] = 1
+        self.hand.append(drawn)
         return drawn
 
 # 各領域カード表示
@@ -81,9 +88,8 @@ def outputPlayerCard(player, player_name = ""):
     deckText += "\n"
 
     handText = "手札(順序無): "
-    for card in player.cardListN:
-        if(card[1] == 1):
-            handText += card[0].name + ", "
+    for id in player.hand:
+        handText += player.cardListN[id][0].name + ", "
     handText += "\n"
 
     discText = "捨札(先　後): "

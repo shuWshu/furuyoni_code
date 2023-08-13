@@ -1,6 +1,6 @@
 import board
 import cardList
-import player
+import player as pl
 
 # ---------- 関数定義 ----------
 # ----- 共通処理 -----
@@ -16,8 +16,8 @@ def damage(player, area, n):
     return -1
 # 焦燥
 def impatience(player):
-    token = checkToken("[焦燥]どちらでダメージを受けますか?\nimpatience 0:オーラ 1:ライフ\n", ["impatience"], ["0", "1"])
-    if token.split()[1] == "0":
+    token = checkToken("[焦燥]どちらでダメージを受けますか?\nimpatience 0:オーラ 1:ライフ\n", ["impatience"], [0, 1])
+    if int(token.split()[1]) == 0:
         damage(player, "aura", 1)
     else:
         damage(player, "life", 1)
@@ -31,14 +31,18 @@ def checkToken(message, tokenList, argList):
             if len(token) != 2:
                 print("\x1b[31mError:引数の数が正しくありません\x1b[0m")
             else:
-                if token[1] in argList:
-                    return Input
-                print("\x1b[31mError:引数の値が正しくありません\x1b[0m")
+                try: 
+                    if int(token[1]) in argList:
+                        return Input
+                    else:
+                        print("\x1b[31mError:引数の値が正しくありません\x1b[0m")
+                except ValueError:
+                    print("\x1b[31mError:引数が整数ではありません\x1b[0m")
         else:
             print("\x1b[31mError:トークンが合致しません\x1b[0m")
 
 # ----- ゲームの流れ -----
-# 開始フェイズ処理
+# 開始フェイズ
 # 引数: 対象プレイヤー
 def startPhase(player):
     # 集中+1
@@ -46,14 +50,24 @@ def startPhase(player):
     # 付与札処理
     # TODO:そのうち作る
     # 再構成
-    token = checkToken("[再構成]行いますか?\nreshuffle 0:しない 1:する\n", ["reshuffle"], ["0", "1"])
-    if(token.split()[1] == "1"):
+    token = checkToken("[再構成]行いますか?\nreshuffle 0:しない 1:する\n", ["reshuffle"], [0, 1])
+    if(int(token.split()[1]) == 1):
         damage(player, "life", 1)
         player.reshuffle()
     # カードを2枚引く
     for i in range(2):
         if(player.drawCard() == -1):
             impatience(player)
+# 終了フェイズ
+def endPhase(player):
+    while(len(player.hand) > 2): # 手札が2枚より多い
+        handText = "伏せる札を選択\ndiscard "
+        for id in player.hand:
+            handText += f"{id}:{player.cardListN[id][0].name} "
+        handText += "\n"
+        token = checkToken(handText, ["discard"], player.hand)
+        id = int(token.split()[1]) # 削除id
+        player.moveCardN(id, 3)
 
 # ----- 定義 -----
 # 領域定義
@@ -67,22 +81,24 @@ aura_1 = board.Area(3, 5)
 flare_1 = board.Area(0, 100)
 gameBoard = [life_0, aura_0, flare_0, life_1, aura_1, flare_1, distance, dust]
 # プレイヤー定義
-player_0 = player.Player(life_0, aura_0, flare_0)
+player_0 = pl.Player(life_0, aura_0, flare_0)
 player_0.setCardList(cardList.cardList_U)
-player_1 = player.Player(life_1, aura_1, flare_1)
+player_1 = pl.Player(life_1, aura_1, flare_1)
 player_1.setCardList(cardList.cardList_H)
 players = [player_0, player_1]
 
 if __name__ == "__main__":
     player_0.moveCardN(1, 1)
-    player_0.moveCardN(2, 2)
-    player_0.moveCardN(3, 3)
+    player_0.moveCardN(2, 1)
+    player_0.moveCardN(3, 1)
     player_0.moveCardN(4, 1)
     player_0.moveCardN(5, 2)
     player_0.moveCardN(6, 3)
     board.outputBoard(gameBoard)
-    player.outputPlayerCard(player_0)
+    pl.outputPlayerCard(player_0)
 
-    startPhase(player_0)
+    endPhase(player_0)
     board.outputBoard(gameBoard)
-    player.outputPlayerCard(player_0)
+    pl.outputPlayerCard(player_0)
+
+    
