@@ -1,4 +1,7 @@
+# プレイヤー関連
 import random
+import board
+import cardList
 
 # 各プレイヤー紐付け情報
 class Player:
@@ -32,11 +35,11 @@ class Player:
     # 再構成
     def reshuffle(self):
         for i, card in enumerate(self.cardListN):
-            if(card[1] == 2 or card == 3):
+            if(card[1] == 2 or card[1] == 3):
                 card[1] = 0
                 self.deck.append(i)
         self.discard = []
-        random(self.deck)
+        random.shuffle(self.deck)
     # カードの移動
     # 引数: カードid, 移動後
     def moveCardN(self, id, area):
@@ -71,7 +74,7 @@ class Player:
         return drawn
 
 # 各領域カード表示
-def outputplayerCard(player, player_name = ""):
+def outputPlayerCard(player, player_name = ""):
     deckText = "山札(上　下): "
     for id in player.deck:
         deckText += player.cardListN[id][0].name + ", "
@@ -110,6 +113,14 @@ def outputplayerCard(player, player_name = ""):
 
 # 各プレイヤーカード表示
 def outputPlayersCard(players, playersName = ["プレイヤー0", "プレイヤー1"]):
-    outputplayerCard(players[0], playersName[0])
-    outputplayerCard(players[1], playersName[1])
+    outputPlayerCard(players[0], playersName[0])
+    outputPlayerCard(players[1], playersName[1])
 
+# テスト
+if __name__ == "__main__":
+    # プレイヤー定義
+    player_0 = Player(board.life_0, board.aura_0, board.flare_0)
+    player_0.setCardList(cardList.cardList_U)
+    player_1 = Player(board.life_1, board.aura_1, board.flare_1)
+    player_1.setCardList(cardList.cardList_H)
+    players = [player_0, player_1]
