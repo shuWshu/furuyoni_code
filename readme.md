@@ -8,12 +8,25 @@
 
 ・reshuffle
 再構成をする
-例: reshuffle 0
 引数: 0:しない 1:する
 
 ## 終了フェイズ
 
 ・discard
 手札を伏せる
-例: discard 2
 引数: カード id
+
+## メインフェイズ
+
+・useNomal
+通常札を使う
+引数: カード id
+・useSpecial
+切札を使う
+引数: カード id
+・basicAction
+基本動作をする
+引数: 0:前進 1:離脱 2:後退 3:纏い 4:宿し
+・turnEnd
+ターン終了
+引数: なし

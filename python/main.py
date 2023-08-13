@@ -16,23 +16,26 @@ def damage(player, area, n):
     return -1
 # 焦燥
 def impatience(player):
-    token = checkToken("[焦燥]どちらでダメージを受けますか?\nimpatience 0:オーラ 1:ライフ\n", ["impatience"], [0, 1])
+    token = checkToken("[焦燥] どちらでダメージを受けますか?\nimpatience 0:オーラ 1:ライフ\n", ["impatience"], [[0, 1]])
     if int(token.split()[1]) == 0:
         damage(player, "aura", 1)
     else:
         damage(player, "life", 1)
 # トークン照合 トークンが違うならループする
-# 引数: 表示メッセージ, 正解トークンリスト, 引数リスト
-def checkToken(message, tokenList, argList):
+# 引数: 表示メッセージ, 正解トークンリスト, 引数リストのリスト
+def checkToken(message, tokenList, argListList):
     while(1):
         Input = input(message)
         token = Input.split()
         if token[0] in tokenList:
+            index = tokenList.index(token[0])
+            if not argListList[index]: # 引数無しで良い場合
+                return Input
             if len(token) != 2:
                 print("\x1b[31mError:引数の数が正しくありません\x1b[0m")
             else:
                 try: 
-                    if int(token[1]) in argList:
+                    if int(token[1]) in argListList[index]:
                         return Input
                     else:
                         print("\x1b[31mError:引数の値が正しくありません\x1b[0m")
@@ -40,6 +43,8 @@ def checkToken(message, tokenList, argList):
                     print("\x1b[31mError:引数が整数ではありません\x1b[0m")
         else:
             print("\x1b[31mError:トークンが合致しません\x1b[0m")
+
+            
 
 # ----- ゲームの流れ -----
 # 開始フェイズ
@@ -50,7 +55,7 @@ def startPhase(player):
     # 付与札処理
     # TODO:そのうち作る
     # 再構成
-    token = checkToken("[再構成]行いますか?\nreshuffle 0:しない 1:する\n", ["reshuffle"], [0, 1])
+    token = checkToken("[再構成] 行いますか?\nreshuffle 0:しない 1:する\n", ["reshuffle"], [[0, 1]])
     if(int(token.split()[1]) == 1):
         damage(player, "life", 1)
         player.reshuffle()
@@ -65,9 +70,28 @@ def endPhase(player):
         for id in player.hand:
             handText += f"{id}:{player.cardListN[id][0].name} "
         handText += "\n"
-        token = checkToken(handText, ["discard"], player.hand)
+        token = checkToken(handText, ["discard"], [player.hand])
         id = int(token.split()[1]) # 削除id
         player.moveCardN(id, 3)
+# メインフェイズ
+def mainPhase(player):
+    while(1):
+        message = "[メインフェイズ] 行動を選択"
+        message += "\nuseNomal "
+        for id in player.hand:
+            message += f"{id}:{player.cardListN[id][0].name} "
+        message += "\nuseSpecial "
+        usableSpecial = []
+        for id, card in enumerate(player.cardListS):
+            if(card[1] == 0):
+                message += f"{id}:{card[0].name} "
+                usableSpecial.append(id)
+        message += "\nbasicAction 0:前進 1:離脱 2:後退 3:纏い 4:宿し"
+        message += "\nturnEnd\n"
+        
+        token = checkToken(message, ["useNomal" , "useSpecial" , "basicAction"  , "turnEnd"], 
+                                    [player.hand, usableSpecial, [0, 1, 2, 3, 4], []       ])
+        print(token)
 
 # ----- 定義 -----
 # 領域定義
@@ -94,11 +118,10 @@ if __name__ == "__main__":
     player_0.moveCardN(4, 1)
     player_0.moveCardN(5, 2)
     player_0.moveCardN(6, 3)
+    player_0.chgCardS(1, -1)
     board.outputBoard(gameBoard)
     pl.outputPlayerCard(player_0)
 
-    endPhase(player_0)
-    board.outputBoard(gameBoard)
-    pl.outputPlayerCard(player_0)
+    mainPhase(player_0)
 
     
