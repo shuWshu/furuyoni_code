@@ -20,7 +20,7 @@ def damage(player, area, n, areas):
 # ダメージ処理関数用クラス
 # 使用前にsetConfigを使うこと!!
 # 
-class Damage:
+class InflictDamage:
     def __init__(self):
         self.dust = None
         self.loseFunc = None
@@ -46,15 +46,15 @@ class Damage:
         return bd.moveAreaVal(player.aura, self.dust, n)
 
 # インポート関数定義
-damage = Damage()
+inflictDamage = InflictDamage()
 
 # 焦燥
 def impatience(player):
     tokens = checkToken("[焦燥] どちらでダメージを受けますか?\nimpatience 0:オーラ 1:ライフ\n", ["impatience"], [[0, 1]])
     if tokens[1] == 0:
-        damage.aura(player, 1)
+        inflictDamage.aura(player, 1)
     else:
-        damage.life(player, 1)
+        inflictDamage.life(player, 1)
 
 # トークン照合 トークンが違うならループする
 # 引数: 表示メッセージ, 正解命令リスト, 引数リストのリスト
@@ -80,3 +80,53 @@ def checkToken(message, orderList, argListList):
                     print("\x1b[31mError:引数が整数ではありません\x1b[0m")
         else:
             print("\x1b[31mError:命令が存在しません\x1b[0m")
+
+# 攻撃処理
+# 引数: 使用者, 攻撃された者, ボードデータ, 適正距離[], ダメージ[], 対応不可TF
+# 返値: 成功時ダメージ, 失敗時-1
+def attack(usePlayer, usedPlayer, areas, dist, damage, noReaction=False):
+    # ダメージ選択 or 対応
+    message = "[《攻撃》への対応 ] 行動を選択"
+    message += "\ndamageBy 0:オーラ 1:ライフ"
+    orderList = ["damageBy"]
+    argListList = [[0, 1]]
+    if not noReaction: # 対応可能の場合
+        message += "\nreactionNomal "
+        for id in usedPlayer.hand:
+            message += f"{id}:{usedPlayer.cardListN[id][0].name} "
+        message += "\nreactionSpecial "
+        usableSpecial = []
+        for id, card in enumerate(usedPlayer.cardListS):
+            if(card[1] == 0):
+                message += f"{id}:{card[0].name} "
+                usableSpecial.append(id)
+        orderList = ["damageBy" , "reactionNomal" , "reactionSpecial"]
+        argListList = [[0, 1], usedPlayer.hand, usableSpecial]
+    message += "\n"
+    tokens = checkToken(message, orderList, argListList)
+    orderIndex = orderList.index(tokens[0])
+    if orderIndex != 0: # 対応使用
+        if orderIndex == 1:
+            # TODO:カードの使用
+            print(tokens)
+        elif orderIndex == 2:
+            # TODO:カードの使用
+            print(tokens)
+
+        # 間合確認
+        if areas.distance.val not in dist: # 避けられた場合
+            print("攻撃間合に合わない")
+            return -1
+        # ダメージ選択
+        argListList = [[0, 1], usedPlayer.hand, usableSpecial]
+        tokens = checkToken("[《攻撃》ダメージ選択 ]\ndamageBy 0:オーラ 1:ライフ\n", ["damageBy"], [[0, 1]])
+    # ダメージ処理
+    if usedPlayer.aura.val < damage[0] or damage[0] == -1: # オーラが少ない or オーラダメージが-
+        inflictDamage.life(usedPlayer, damage[1])
+    elif damage[1] == -1: # ライフダメージが-
+        inflictDamage.life(usedPlayer, damage[0])
+    else:
+        if tokens[1] == 0:
+            inflictDamage.aura(usedPlayer, damage[0])
+        else:
+            inflictDamage.life(usedPlayer, damage[1])

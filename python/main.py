@@ -17,7 +17,7 @@ def startPhase(player):
     # 再構成
     tokens = cp.checkToken("[再構成] 行いますか?\nreshuffle 0:しない 1:する\n", ["reshuffle"], [[0, 1]])
     if(tokens[1] == 1):
-        cp.damage.life(player, 1)
+        cp.inflictDamage.life(player, 1)
         player.reshuffle()
     # カードを2枚引く
     for i in range(2):
@@ -79,20 +79,20 @@ players = [player_0, player_1]
 # ゲーム全体の領域保存
 
 # インポート関数定義
-cp.damage.setConfig(areas.dust, lose)
+cp.inflictDamage.setConfig(areas.dust, lose)
 
 if __name__ == "__main__":
-    player_0.moveCardN(1, 1)
-    player_0.moveCardN(2, 1)
-    player_0.moveCardN(3, 1)
-    player_0.moveCardN(4, 1)
-    player_0.moveCardN(5, 2)
-    player_0.moveCardN(6, 3)
-    player_0.chgCardS(1, -1)
+    players[0].moveCardN(1, 1)
+    players[0].moveCardN(2, 1)
+    players[0].moveCardN(3, 1)
+    players[0].moveCardN(4, 1)
+    players[0].moveCardN(5, 2)
+    players[0].moveCardN(6, 3)
+    players[0].chgCardS(1, -1)
     bd.outputBoard(areas)
-    pl.outputPlayerCard(player_0)
+    pl.outputPlayerCard(players[0])
 
-    cardFunc.Hohou(player_0, player_1, areas)
+    cp.attack(players[1], players[0], areas, [3, 4, 5, 10], [4, 11], noReaction=True)
 
     bd.outputBoard(areas)
-    pl.outputPlayerCard(player_0)
+    pl.outputPlayerCard(players[0])
