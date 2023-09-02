@@ -93,7 +93,7 @@ if __name__ == "__main__":
     pl.outputPlayerCard(players[0])
 
     # startPhase(players[0])
-    d = cardList.card_US2.func(players[0], players[1], areas)
+    d = cardList.card_US2.use(players[0], players[1], areas)
     print(f"return:{d}")
 
     bd.outputBoard(areas)

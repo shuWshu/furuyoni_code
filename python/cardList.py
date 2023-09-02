@@ -39,7 +39,7 @@ class Card:
                 return cp.attack(usePlayer, usedPlayer, areas, self.dist, self.Damage)
             self.function = commonAttack
         
-    def func(self, usePlayer, usedPlayer, areas):
+    def use(self, usePlayer, usedPlayer, areas):
         print(self.name + " を使用")
         return self.function(usePlayer, usedPlayer, areas)
 
