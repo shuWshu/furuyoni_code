@@ -155,3 +155,15 @@ def draw(player):
         impatience(player)
         return -1
     return 1
+
+# 通常札の使用
+# 引数: 使用者, 被使用者, ボード情報, カードid
+# 返値: 成功:1 不成立:-1
+def useCard(usePlayer, usedPlayer, areas, cardID):
+    result = usePlayer.cardListN[cardID][0].use(usePlayer, usedPlayer, areas)
+    if result == -1:
+        print("カード使用が出来ない")
+        return -1
+    else:
+        usePlayer.moveCardN(cardID, 2) # 捨札へ移動
+        return 1

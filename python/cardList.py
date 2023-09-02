@@ -40,7 +40,7 @@ class Card:
             self.function = commonAttack
         
     def use(self, usePlayer, usedPlayer, areas):
-        print(self.name + " を使用")
+        print("「" + self.name + "」を使用")
         return self.function(usePlayer, usedPlayer, areas)
 
 

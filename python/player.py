@@ -3,6 +3,8 @@ import random
 import board
 import cardList
 
+cardPosNames = ["山札", "手札", "捨札", "伏札", "付与札"]
+
 # 各プレイヤー紐付け情報
 class Player:
     def __init__(self, name, life, aura, flare):
@@ -64,6 +66,7 @@ class Player:
         elif(area == 2 or area == 3): # 捨伏札にある
             self.discard.append(id) # 捨伏リストへ追加
         self.cardListN[id][1] = area
+        print("「" + self.cardListN[id][0].name + "」 " + cardPosNames[prevArea] + " → " + cardPosNames[area])
     # 切札状態変更
     # 引数: カードid, 状態(-1なら逆にする, 0or1で指定)
     def chgCardS(self, id, state = -1):

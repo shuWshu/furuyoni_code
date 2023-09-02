@@ -3,8 +3,6 @@ import cardList
 import player as pl
 import commonProcess as cp
 
-import cardFunc # テスト用
-
 # ---------- 関数定義 ----------
 # ----- ゲームの流れ -----
 # 開始フェイズ
@@ -92,8 +90,7 @@ if __name__ == "__main__":
     bd.outputBoard(areas)
     pl.outputPlayerCard(players[0])
 
-    # startPhase(players[0])
-    d = cardList.card_US2.use(players[0], players[1], areas)
+    d = cp.useCard(players[0], players[1], areas, 6)
     print(f"return:{d}")
 
     bd.outputBoard(areas)
