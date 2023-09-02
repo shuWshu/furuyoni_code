@@ -58,9 +58,9 @@ class Areas:
         self.life_0 = Area("ライフP0", 10, 100)
         self.aura_0 = Area("オーラP0", 3, 5)
         self.flare_0 = Area("フレアP0", 0, 100)
-        self.life_1 = Area("ライフP0", 10, 100)
-        self.aura_1 = Area("オーラP0", 3, 5)
-        self.flare_1 = Area("フレアP0", 0, 100)
+        self.life_1 = Area("ライフP1", 10, 100)
+        self.aura_1 = Area("オーラP1", 3, 5)
+        self.flare_1 = Area("フレアP1", 0, 100)
 
 # テスト
 if __name__ == "__main__":

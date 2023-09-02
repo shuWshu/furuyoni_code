@@ -39,9 +39,9 @@ class Card:
                 return cp.attack(usePlayer, usedPlayer, areas, self.dist, self.Damage)
             self.function = commonAttack
         
-        def func(self, usePlayer, usedPlayer, areas):
-            print(self.name + " を使用")
-            return self.function(usePlayer, usedPlayer, areas)
+    def func(self, usePlayer, usedPlayer, areas):
+        print(self.name + " を使用")
+        return self.function(usePlayer, usedPlayer, areas)
 
 
 # n字インデントを下げる関数
@@ -130,12 +130,12 @@ card_UN3 = Card(0, "牽制", 3, "hajimari", 0, "a", 0, 0, "", [[1, 2, 3], [2, 1]
 card_UN4 = Card(0, "背中刺し", 4, "hajimari", 0, "a", 0, 0, "", [[1], [3, 2]])
 card_UN5 = Card(0, "二刀一閃", 5, "hajimari", 0, "a", 0, 2, "", [[2, 3], [4, 2]])
 card_UN6 = Card(0, "歩法", 6, "hajimari", 0, "a", 1, 0, "集中力を1得る。\n間合 ←1→ ダスト", [], func=cardFunc.Hohou)
-card_UN7 = Card(0, "潜り", 7, "hajimari", 0, "a", 1, 1, "間合 →1→ ダスト", [])
+card_UN7 = Card(0, "潜り", 7, "hajimari", 0, "a", 1, 1, "間合 →1→ ダスト", [], func=cardFunc.Moguri)
 card_UN8 = Card(0, "患い", 8, "hajimari", 0, "a", 1, 1, "対応した<攻撃>は-1/+0される。\n相手を萎縮させる。", [])
 card_UN9 = Card(0, "陰の罠", 9, "hajimari", 0, "a", 2, 0, "隙\n【破棄時】攻撃「適正距離2-3、3/2、対応不可」を行う。", [2])
 card_US1 = Card(1, "数多ノ刃", 1, "hajimari", 0, "a", 0, 0, "", [[1, 2], [4, 3]], 5)
-card_US2 = Card(1, "闇凪ノ声", 2, "hajimari", 0, "a", 1, 0, "カードを2枚引く。", [], 4)
-card_US3 = Card(1, "苦ノ外套", 3, "hajimari", 0, "a", 1, 1, "対応した《攻撃》は-2/+0となる。\n相オーラ →2→ ダスト", [], 3)
+card_US2 = Card(1, "闇凪ノ声", 2, "hajimari", 0, "a", 1, 0, "カードを2枚引く。", [], 4, func=cardFunc.YaminagiNoKoe)
+card_US3 = Card(1, "苦ノ外套", 3, "hajimari", 0, "a", 1, 1, "対応した《攻撃》は-2/+0となる。\n相オーラ →2→ ダスト", [], 3, func=cardFunc.KuNoGaito)
 card_US4 = Card(1, "奪イノ茨", 4, "hajimari", 0, "a", 1, 2, "相手は手札を全て捨て札にし、集中力が0になる。\n再起:ダストが10以上である。", [], 1)
 card_HN1 = Card(0, "花弁刃", 1, "hajimari", 0, "b", 0, 0, "", [[4, 5], [-1, 1]])
 card_HN2 = Card(0, "桜刀", 2, "hajimari", 0, "b", 0, 0, "", [[3, 4], [3, 1]])

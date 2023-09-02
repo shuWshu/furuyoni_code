@@ -10,7 +10,7 @@ class CardFunc:
         self.function(usePlayer, usedPlayer, areas)
 
 # カード処理の羅列
-# 引数: 使用者, 被使用者, ボード情報
+# 引数: 使用者, 被使用者, ボード情報, (対応のみ)対応使用か否か
 # 返値: 成功;1 何らかの理由で不成立:-1
 # 歩法
 def Hohou(usePlayer, usedPlayer, areas):
@@ -24,7 +24,7 @@ def Hohou(usePlayer, usedPlayer, areas):
     return 1
 
 # 潜り
-def Moguri(usePlayer, usedPlayer, areas):
+def Moguri(usePlayer, usedPlayer, areas, reaction=False):
     # 間合 →1→ ダスト
     bd.moveAreaValPoss(areas.distance, areas.dust, 1)
     return 1
@@ -37,6 +37,9 @@ def YaminagiNoKoe(usePlayer, usedPlayer, areas):
     return 1
 
 # 苦の外套
-def KuNoGaito():
+def KuNoGaito(usePlayer, usedPlayer, areas, reaction=False):
     # TODO:対応による減算処理どうしよう
+    # 対応した《攻撃》は-2/+0となる。
+    # 相オーラ →2→ ダスト
+    bd.moveAreaValPoss(usedPlayer.aura, areas.dust, 2)
     return 1

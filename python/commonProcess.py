@@ -97,8 +97,8 @@ def checkDist(dist, cardDist):
 def attack(usePlayer, usedPlayer, areas, cardDist, damage, noReaction=False):
     # 間合確認
     if checkDist(areas.distance.val, cardDist) != 1: # 避けられた場合
-        print("攻撃間合に合わない")
         return -1
+    
     # ダメージ選択 or 対応
     message = "[《攻撃》への対応 ] 行動を選択"
     message += "\ndamageBy 0:オーラ 1:ライフ"
@@ -119,7 +119,9 @@ def attack(usePlayer, usedPlayer, areas, cardDist, damage, noReaction=False):
     message += "\n"
     tokens = checkToken(message, orderList, argListList)
     orderIndex = orderList.index(tokens[0])
-    if orderIndex != 0: # 対応使用
+
+    # 対応使用
+    if orderIndex != 0:
         if orderIndex == 1:
             # TODO:カードの使用
             print(tokens)
@@ -129,7 +131,6 @@ def attack(usePlayer, usedPlayer, areas, cardDist, damage, noReaction=False):
 
         # 間合確認
         if checkDist(areas.distance.val, cardDist) != 1: # 避けられた場合
-            print("攻撃間合に合わない")
             return 0
         # ダメージ選択
         argListList = [[0, 1], usedPlayer.hand, usableSpecial]
