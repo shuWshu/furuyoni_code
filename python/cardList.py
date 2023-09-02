@@ -36,12 +36,12 @@ class Card:
         self.function = func
         if self.function is None and self.mainType == 0:
             def commonAttack(usePlayer, usedPlayer, areas):
-                print(self.name + " を使用")
-                cp.attack(usePlayer, usedPlayer, areas, self.dist, self.Damage)
+                return cp.attack(usePlayer, usedPlayer, areas, self.dist, self.Damage)
             self.function = commonAttack
         
         def func(self, usePlayer, usedPlayer, areas):
-            self.function(usePlayer, usedPlayer, areas)
+            print(self.name + " を使用")
+            return self.function(usePlayer, usedPlayer, areas)
 
 
 # n字インデントを下げる関数

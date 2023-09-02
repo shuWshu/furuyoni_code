@@ -21,8 +21,7 @@ def startPhase(player):
         player.reshuffle()
     # カードを2枚引く
     for i in range(2):
-        if(player.drawCard() == -1):
-            cp.impatience(player)
+        cp.draw(player)
 # 終了フェイズ
 def endPhase(player):
     while(len(player.hand) > 2): # 手札が2枚より多い
@@ -93,7 +92,9 @@ if __name__ == "__main__":
     bd.outputBoard(areas)
     pl.outputPlayerCard(players[0])
 
-    cardList.card_UN6.function(players[0], players[1], areas)
+    # startPhase(players[0])
+    d = cardList.card_UN1.function(players[0], players[1], areas)
+    print(f"return:{d}")
 
     bd.outputBoard(areas)
     pl.outputPlayerCard(players[0])

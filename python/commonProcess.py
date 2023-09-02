@@ -93,7 +93,7 @@ def checkDist(dist, cardDist):
 
 # 攻撃処理
 # 引数: 使用者, 被使用者, ボードデータ, 適正距離[], ダメージ[], 対応不可TF
-# 返値: 成功時:ダメージ, 失敗時:0, 不成立時:-1
+# 返値: 成功時:1, 失敗時(打消,回避など):0, 不成立時:-1
 def attack(usePlayer, usedPlayer, areas, cardDist, damage, noReaction=False):
     # 間合確認
     if checkDist(areas.distance.val, cardDist) != 1: # 避けられた場合
@@ -142,7 +142,15 @@ def attack(usePlayer, usedPlayer, areas, cardDist, damage, noReaction=False):
     else:
         if tokens[1] == 0:
             inflictDamage.aura(usedPlayer, damage[0])
-            return damage[0]
         else:
             inflictDamage.life(usedPlayer, damage[1])
-            return damage[1]
+    return 1
+        
+# ドロー処理
+# 引数: プレイヤー
+# 返値: 成功:1 失敗(焦燥):-1
+def draw(player):
+    if(player.drawCard() == -1):
+        impatience(player)
+        return -1
+    return 1
