@@ -89,10 +89,11 @@ if __name__ == "__main__":
     players[0].moveCardN(5, 2)
     players[0].moveCardN(6, 3)
     players[0].chgCardS(1, -1)
+    bd.moveAreaVal(areas.distance, areas.dust, 3)
     bd.outputBoard(areas)
     pl.outputPlayerCard(players[0])
 
-    cp.attack(players[1], players[0], areas, [3, 4, 5, 10], [4, 11], noReaction=True)
+    cardList.card_UN6.function(players[0], players[1], areas)
 
     bd.outputBoard(areas)
     pl.outputPlayerCard(players[0])

@@ -81,10 +81,24 @@ def checkToken(message, orderList, argListList):
         else:
             print("\x1b[31mError:命令が存在しません\x1b[0m")
 
+# 現在間合確認
+# 引数: 現在間合の値, 適正距離配列
+# 返値: 成功:1 失敗:-1
+def checkDist(dist, cardDist):
+    if dist in cardDist: # 当たった場合
+        return 1
+    else:
+        print("適正距離不適合")
+        return -1
+
 # 攻撃処理
-# 引数: 使用者, 攻撃された者, ボードデータ, 適正距離[], ダメージ[], 対応不可TF
-# 返値: 成功時ダメージ, 失敗時-1
-def attack(usePlayer, usedPlayer, areas, dist, damage, noReaction=False):
+# 引数: 使用者, 被使用者, ボードデータ, 適正距離[], ダメージ[], 対応不可TF
+# 返値: 成功時:ダメージ, 失敗時:0, 不成立時:-1
+def attack(usePlayer, usedPlayer, areas, cardDist, damage, noReaction=False):
+    # 間合確認
+    if checkDist(areas.distance.val, cardDist) != 1: # 避けられた場合
+        print("攻撃間合に合わない")
+        return -1
     # ダメージ選択 or 対応
     message = "[《攻撃》への対応 ] 行動を選択"
     message += "\ndamageBy 0:オーラ 1:ライフ"
@@ -114,9 +128,9 @@ def attack(usePlayer, usedPlayer, areas, dist, damage, noReaction=False):
             print(tokens)
 
         # 間合確認
-        if areas.distance.val not in dist: # 避けられた場合
+        if checkDist(areas.distance.val, cardDist) != 1: # 避けられた場合
             print("攻撃間合に合わない")
-            return -1
+            return 0
         # ダメージ選択
         argListList = [[0, 1], usedPlayer.hand, usableSpecial]
         tokens = checkToken("[《攻撃》ダメージ選択 ]\ndamageBy 0:オーラ 1:ライフ\n", ["damageBy"], [[0, 1]])
@@ -128,5 +142,7 @@ def attack(usePlayer, usedPlayer, areas, dist, damage, noReaction=False):
     else:
         if tokens[1] == 0:
             inflictDamage.aura(usedPlayer, damage[0])
+            return damage[0]
         else:
             inflictDamage.life(usedPlayer, damage[1])
+            return damage[1]

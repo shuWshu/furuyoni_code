@@ -2,7 +2,8 @@
 # 領域クラス
 # 現在値(初期値)と最大値を格納
 class Area:
-    def __init__(self, val, max) -> None:
+    def __init__(self, name, val, max) -> None:
+        self.name = name # 領域名
         self.val = val
         self.max = max
 
@@ -17,20 +18,24 @@ def chgAreaVal(area, n):
 
 # 結晶をn個移動させる関数 A→n→B
 # 返値：移動個数
-def moveAreaVal(areaA, areaB, n):
+def moveAreaVal(areaA, areaB, n, log=True):
     if(chgAreaVal(areaA, -n) == -1): # 失敗した場合
         return 0
     if(chgAreaVal(areaB, n) == -1): # 失敗した場合
         chgAreaVal(areaA, n)
         return 0
+    if log == True:
+        print(f"{areaA.name} →{n}→ {areaB.name}")
     return n
 
 # 結晶を「できる限り」n個まで移動させる関数 A→n→B
 # 返値：移動個数
 def moveAreaValPoss(areaA, areaB, n):
     for i in range(n): # n回1つづつ移動
-        if(moveAreaVal(areaA, areaB, 1) == 0):
+        if(moveAreaVal(areaA, areaB, 1, log=False) == 0):
+            print(f"{areaA.name} →{i}→ {areaB.name}")
             return i
+    print(f"{areaA.name} →{n}→ {areaB.name}") 
     return n
 
 # 表示関数
@@ -48,14 +53,14 @@ P1 フレア:{areas.flare_1.val}
 
 class Areas:
     def __init__(self) -> None:
-        self.distance = Area(10, 10)
-        self.dust = Area(0, 100)
-        self.life_0 = Area(10, 100)
-        self.aura_0 = Area(3, 5)
-        self.flare_0 = Area(0, 100)
-        self.life_1 = Area(10, 100)
-        self.aura_1 = Area(3, 5)
-        self.flare_1 = Area(0, 100)
+        self.distance = Area("間合", 10, 10)
+        self.dust = Area("ダスト", 0, 100)
+        self.life_0 = Area("ライフP0", 10, 100)
+        self.aura_0 = Area("オーラP0", 3, 5)
+        self.flare_0 = Area("フレアP0", 0, 100)
+        self.life_1 = Area("ライフP0", 10, 100)
+        self.aura_1 = Area("オーラP0", 3, 5)
+        self.flare_1 = Area("フレアP0", 0, 100)
 
 # テスト
 if __name__ == "__main__":

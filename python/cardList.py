@@ -1,3 +1,4 @@
+import commonProcess as cp
 import cardFunc
 
 # クラス定義
@@ -6,7 +7,7 @@ class Card:
     # 攻撃:[[間合], [オーラダメージ, ライフダメージ]]
     # 行動:[]
     # 付与:[納]
-    def __init__(self, Class, name, num, megami, megamiNo, version, mainType, subType, text, parameter, cost = 0) -> None:
+    def __init__(self, Class, name, num, megami, megamiNo, version, mainType, subType, text, parameter, cost = 0, func=None) -> None:
         self.Class = Class # 通常:0, 切札:1
         self.name = name # カード名 string
         self.num = num # カードナンバー int
@@ -23,11 +24,25 @@ class Card:
             self.pay = parameter[0] # 納 int null可能
         if(self.Class == 1):
             self.cost = cost # フレアコスト int null可能
+
+        # カードナンバーの文字列
         self.cardNo = f"NA_{str(self.megamiNo).zfill(2)}_{self.megami}_{self.version.upper()}_"
         if(self.Class == 0):
             self.cardNo += f"N_{self.num}"
         elif(self.Class == 1):
             self.cardNo += f"S_{self.num}"
+
+        # カードの処理
+        self.function = func
+        if self.function is None and self.mainType == 0:
+            def commonAttack(usePlayer, usedPlayer, areas):
+                print(self.name + " を使用")
+                cp.attack(usePlayer, usedPlayer, areas, self.dist, self.Damage)
+            self.function = commonAttack
+        
+        def func(self, usePlayer, usedPlayer, areas):
+            self.function(usePlayer, usedPlayer, areas)
+
 
 # n字インデントを下げる関数
 def indentText(text, num_spaces):
@@ -114,7 +129,7 @@ card_UN2 = Card(0, "脇斬り", 2, "hajimari", 0, "a", 0, 0, "", [[2, 3], [2, 2]
 card_UN3 = Card(0, "牽制", 3, "hajimari", 0, "a", 0, 0, "", [[1, 2, 3], [2, 1]])
 card_UN4 = Card(0, "背中刺し", 4, "hajimari", 0, "a", 0, 0, "", [[1], [3, 2]])
 card_UN5 = Card(0, "二刀一閃", 5, "hajimari", 0, "a", 0, 2, "", [[2, 3], [4, 2]])
-card_UN6 = Card(0, "歩法", 6, "hajimari", 0, "a", 1, 0, "集中力を1得る。\n間合 ←1→ ダスト", [])
+card_UN6 = Card(0, "歩法", 6, "hajimari", 0, "a", 1, 0, "集中力を1得る。\n間合 ←1→ ダスト", [], func=cardFunc.Hohou)
 card_UN7 = Card(0, "潜り", 7, "hajimari", 0, "a", 1, 1, "間合 →1→ ダスト", [])
 card_UN8 = Card(0, "患い", 8, "hajimari", 0, "a", 1, 1, "対応した<攻撃>は-1/+0される。\n相手を萎縮させる。", [])
 card_UN9 = Card(0, "陰の罠", 9, "hajimari", 0, "a", 2, 0, "隙\n【破棄時】攻撃「適正距離2-3、3/2、対応不可」を行う。", [2])
