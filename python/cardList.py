@@ -22,8 +22,7 @@ class Card:
             self.Damage = parameter[1] # ダメージ [オーラ, ライフ] [int, int] null可能 "-"は-1で表現 "X"は-2で表現
         if(self.mainType == 2): # 付与札のみ
             self.pay = parameter[0] # 納 int null可能
-        if(self.Class == 1):
-            self.cost = cost # フレアコスト int null可能
+        self.cost = cost # フレアコスト int null可能
 
         # カードナンバーの文字列
         self.cardNo = f"NA_{str(self.megamiNo).zfill(2)}_{self.megami}_{self.version.upper()}_"
@@ -33,12 +32,14 @@ class Card:
             self.cardNo += f"S_{self.num}"
 
         # カードの処理
+        # カード特有の挙動
         self.function = func
         if self.function is None and self.mainType == 0:
             def commonAttack(usePlayer, usedPlayer, areas):
                 return cp.attack(usePlayer, usedPlayer, areas, self.dist, self.Damage)
             self.function = commonAttack
         
+    # 効果の使用
     def use(self, usePlayer, usedPlayer, areas):
         print("「" + self.name + "」を使用")
         return self.function(usePlayer, usedPlayer, areas)

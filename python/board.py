@@ -17,13 +17,13 @@ def chgAreaVal(area, n):
     return area.val
 
 # 結晶をn個移動させる関数 A→n→B
-# 返値：移動個数
+# 返値：移動個数, 失敗時-1
 def moveAreaVal(areaA, areaB, n, log=True):
     if(chgAreaVal(areaA, -n) == -1): # 失敗した場合
-        return 0
+        return -1
     if(chgAreaVal(areaB, n) == -1): # 失敗した場合
         chgAreaVal(areaA, n)
-        return 0
+        return -1
     if log == True:
         print(f"{areaA.name} →{n}→ {areaB.name}")
     return n

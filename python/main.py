@@ -86,11 +86,11 @@ if __name__ == "__main__":
     players[0].moveCardN(5, 2)
     players[0].moveCardN(6, 3)
     players[0].chgCardS(1, -1)
-    bd.moveAreaVal(areas.distance, areas.dust, 3)
+    bd.moveAreaVal(areas.distance, areas.flare_0, 4)
     bd.outputBoard(areas)
     pl.outputPlayerCard(players[0])
 
-    d = cp.useCard(players[0], players[1], areas, 6)
+    d = cp.useCardSpecial(players[0], players[1], areas, 1)
     print(f"return:{d}")
 
     bd.outputBoard(areas)

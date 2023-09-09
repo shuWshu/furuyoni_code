@@ -157,13 +157,34 @@ def draw(player):
     return 1
 
 # 通常札の使用
+# カード使用の前後処理のみ
 # 引数: 使用者, 被使用者, ボード情報, カードid
 # 返値: 成功:1 不成立:-1
-def useCard(usePlayer, usedPlayer, areas, cardID):
+def useCardNomal(usePlayer, usedPlayer, areas, cardID):
     result = usePlayer.cardListN[cardID][0].use(usePlayer, usedPlayer, areas)
-    if result == -1:
+    if result == -1: # 失敗時(間合不適合など)
         print("カード使用が出来ない")
         return -1
     else:
         usePlayer.moveCardN(cardID, 2) # 捨札へ移動
+        return 1
+    
+# 切札の使用
+# カード使用の前後処理のみ
+# 引数: 使用者, 被使用者, ボード情報, カードid
+# 返値: 成功:1 不成立:-1
+def useCardSpecial(usePlayer, usedPlayer, areas, cardID):
+    # フレア支払い
+    cost =  usePlayer.cardListS[cardID][0].cost
+    
+    if bd.moveAreaVal(usePlayer.flare, areas.dust, cost) == -1:
+        print("フレア不足")
+        return -1        
+    
+    result = usePlayer.cardListS[cardID][0].use(usePlayer, usedPlayer, areas)
+    if result == -1: # 失敗時(間合不適合など)
+        print("カード使用が出来ない")
+        return -1
+    else:
+        usePlayer.chgCardS(cardID, 1) # 使用済へ変更
         return 1

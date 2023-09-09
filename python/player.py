@@ -45,7 +45,7 @@ class Player:
         self.discard = []
         random.shuffle(self.deck)
     # カードの移動
-    # 引数: カードid, 移動後
+    # 引数: カードid, 移動後(数字)
     def moveCardN(self, id, area):
         prevArea = self.cardListN[id][1]
         # 移動前
@@ -76,12 +76,12 @@ class Player:
             self.cardListS[id][1] = state
     # ドロー処理
     # 返値: 成功なら引いたカードid, 失敗なら-1
+    # 2023/09/09 処理をmoveCardNに変更
     def drawCard(self):
         if not self.deck:
             return -1
-        drawn = self.deck.pop(0)
-        self.cardListN[drawn][1] = 1
-        self.hand.append(drawn)
+        drawn = self.deck[0]
+        self.moveCardN(drawn, 1)
         return drawn
 
 # 各領域カード表示
