@@ -24,7 +24,7 @@ def moveAreaVal(areaA, areaB, n, log=True):
     if(chgAreaVal(areaB, n) == -1): # 失敗した場合
         chgAreaVal(areaA, n)
         return -1
-    if log == True:
+    if log == True: # 移動ログ
         print(f"{areaA.name} →{n}→ {areaB.name}")
     return n
 
@@ -32,7 +32,7 @@ def moveAreaVal(areaA, areaB, n, log=True):
 # 返値：移動個数
 def moveAreaValPoss(areaA, areaB, n):
     for i in range(n): # n回1つづつ移動
-        if(moveAreaVal(areaA, areaB, 1, log=False) == 0):
+        if(moveAreaVal(areaA, areaB, 1, log=False) == 0): # 移動不可なら
             print(f"{areaA.name} →{i}→ {areaB.name}")
             return i
     print(f"{areaA.name} →{n}→ {areaB.name}") 

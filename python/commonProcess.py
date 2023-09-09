@@ -157,7 +157,7 @@ def draw(player):
     return 1
 
 # 通常札の使用
-# カード使用の前後処理のみ
+# カード使用の前後共通処理のみ
 # 引数: 使用者, 被使用者, ボード情報, カードid
 # 返値: 成功:1 不成立:-1
 def useCardNomal(usePlayer, usedPlayer, areas, cardID):
@@ -176,7 +176,6 @@ def useCardNomal(usePlayer, usedPlayer, areas, cardID):
 def useCardSpecial(usePlayer, usedPlayer, areas, cardID):
     # フレア支払い
     cost =  usePlayer.cardListS[cardID][0].cost
-    
     if bd.moveAreaVal(usePlayer.flare, areas.dust, cost) == -1:
         print("フレア不足")
         return -1        
@@ -188,3 +187,37 @@ def useCardSpecial(usePlayer, usedPlayer, areas, cardID):
     else:
         usePlayer.chgCardS(cardID, 1) # 使用済へ変更
         return 1
+
+# 基本動作
+# 引数: 使用者, ボード情報, アクションID, コスト
+# アクションID: 0:前進 1:離脱 2:後退 3:纏い 4:宿し
+# 返値: 成功:1 失敗:-1
+def basicAction(usePlayer, areas, actionID, costID):
+    # 集中力があるかの確認
+    if costID == 7 and usePlayer.vigor == 0:
+        print("集中力がありません")
+        return -1
+    
+    # 動作の中身
+    done = 0
+    if actionID == 0: # 前進
+        done = bd.moveAreaVal(areas.distance, usePlayer.aura, 1)
+    elif actionID == 1: # 離脱
+        done = bd.moveAreaVal(areas.dust, areas.distance, 1)
+    elif actionID == 2: # 後退
+        done = bd.moveAreaVal(usePlayer.aura, areas.distance, 1)
+    elif actionID == 3: # 纏い
+        done = bd.moveAreaVal(areas.dust, usePlayer.aura, 1)
+    elif actionID == 4: # 宿し
+        done = bd.moveAreaVal(usePlayer.aura, usePlayer.flare, 1)
+    
+    if done == -1: # 処理できなかった
+        print("結晶の移動が不可能")
+        return -1
+
+    # 消費を払う
+    if costID == 7:
+        usePlayer.chgVigor(-1)
+    else:
+        usePlayer.moveCardN(costID, 3) # 伏札へ移動
+    return done
