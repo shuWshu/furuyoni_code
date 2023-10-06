@@ -15,6 +15,11 @@ class Player:
         self.deck = [0, 1, 2, 3, 4, 5, 6] # 山札順番管理
         self.hand = [] # 手札管理
         self.discard = [] # 捨札&伏せ札の順番管理
+        # -----フラグ管理-----
+        self.flagThroughout = False # 全力使用フラグ
+        self.flagUsedCard = False # カード使用フラグ
+        self.flagUsedBasic = False # 基本動作フラグ
+        # -----フラグ管理-----
         self.life = life
         self.aura = aura
         self.flare = flare

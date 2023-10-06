@@ -12,8 +12,7 @@ def startPhase(turnID):
     otherPlayer = players[(turnID + 1) % 2]
     # 集中+1
     turnPlayer.chgVigor(1)
-    # 付与札処理
-    # TODO:そのうち作る
+    # 付与札処理 # TODO:そのうち作る
     # 再構成
     tokens = cp.checkToken("[再構成] 行いますか?\nreshuffle 0:しない 1:する\n", ["reshuffle"], [[0, 1]])
     if(tokens[1] == 1):
@@ -38,6 +37,11 @@ def mainPhase(turnID):
     turnPlayer = players[turnID]
     otherPlayer = players[(turnID + 1) % 2]
     while(1):
+        if turnPlayer.flagThroughout == True: # 全力札を使用した
+            turnPlayer.flagThroughout = False
+            print("ターンエンド")
+            break
+
         message = "[メインフェイズ] 行動を選択"
         message += "\nuseNomal "
         for id in turnPlayer.hand:
@@ -104,7 +108,7 @@ if __name__ == "__main__":
     players[0].moveCardN(5, 1)
     players[0].moveCardN(6, 1)
     players[0].chgCardS(1, -1)
-    bd.moveAreaVal(areas.distance, areas.flare_0, 4)
+    bd.moveAreaVal(areas.distance, areas.flare_0, 8)
     bd.outputBoard(areas)
     pl.outputPlayerCard(players[0])
 
