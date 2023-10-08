@@ -1,5 +1,6 @@
 import commonProcess as cp
 import cardFunc
+import MyPrint as myp
 
 # クラス定義
 class Card:
@@ -41,7 +42,7 @@ class Card:
         
     # 効果の使用
     def use(self, usePlayer, usedPlayer, areas):
-        print("「" + self.name + "」を使用")
+        myp.printDebag("「" + self.name + "」を使用")
         return self.function(usePlayer, usedPlayer, areas)
 
 

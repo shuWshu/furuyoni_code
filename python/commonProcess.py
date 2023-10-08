@@ -1,4 +1,5 @@
 import board as bd
+import MyPrint as myp
 
 # ----- 共通処理 -----
 """
@@ -32,7 +33,7 @@ class InflictDamage:
     # ライフダメージ
     def life(self, player, n):
         if not self.dust:
-            print("need setConfig")
+            myp.printError("need setConfig")
             return -1
         ret = bd.moveAreaValPoss(player.life, player.flare, n)
         if(player.life.val <= 0):
@@ -41,7 +42,7 @@ class InflictDamage:
      # オーラダメージ
     def aura(self, player, n):
         if not self.dust:
-            print("need setConfig")
+            myp.printError("need setConfig")
             return -1
         return bd.moveAreaVal(player.aura, self.dust, n)
 
@@ -69,17 +70,17 @@ def checkToken(message, orderList, argListList):
             if not argListList[index]: # 引数無しで良い場合
                 return order, -1
             if len(token) != 2:
-                print("\x1b[31mError:引数の数が正しくありません\x1b[0m")
+                myp.printError("引数の数が正しくない")
             else:
                 try: 
                     if int(token[1]) in argListList[index]:
                         return order, int(token[1])
                     else:
-                        print("\x1b[31mError:引数の値が正しくありません\x1b[0m")
+                        myp.printError("引数の値が正しくない")
                 except ValueError:
-                    print("\x1b[31mError:引数が整数ではありません\x1b[0m")
+                    myp.printError("引数が整数ではない")
         else:
-            print("\x1b[31mError:命令が存在しません\x1b[0m")
+            myp.printError("命令が存在しない")
 
 # 現在間合確認
 # 引数: 現在間合の値, 適正距離配列
@@ -88,7 +89,7 @@ def checkDist(dist, cardDist):
     if dist in cardDist: # 当たった場合
         return 1
     else:
-        print("適正距離不適合")
+        myp.printError("適正距離が不適合")
         return -1
 
 # 攻撃処理
@@ -163,17 +164,17 @@ def draw(player):
 def useCardNomal(usePlayer, usedPlayer, areas, cardID):
     usingCard = usePlayer.cardListN[cardID][0]
     if usingCard.subType == 2 and (usePlayer.flagUsedCard or usePlayer.flagUsedBasic):
-        print("全力札の使用不可")
+        myp.printError("このターン中は全力札を使えない")
         return -1
     result = usingCard.use(usePlayer, usedPlayer, areas) # カード使用
     if result == -1: # 失敗時(間合不適合など)
-        print("カード使用が出来ない")
+        myp.printError("そのカードは使用出来ない")
         return -1
     else:
         usePlayer.moveCardN(cardID, 2) # 捨札へ移動
         usePlayer.flagUsedCard = True
         if usingCard.subType == 2:
-            print("全力札を解決した")
+            myp.printDebag("全力札を解決した")
             usePlayer.flagThroughout = True
         return 1
     
@@ -184,23 +185,23 @@ def useCardNomal(usePlayer, usedPlayer, areas, cardID):
 def useCardSpecial(usePlayer, usedPlayer, areas, cardID):
     usingCard = usePlayer.cardListS[cardID][0]
     if usingCard.subType == 2 and (usePlayer.flagUsedCard or usePlayer.flagUsedBasic):
-        print("全力札の使用不可")
+        myp.printError("このターン中は全力札を使えない")
         return -1
     # フレア支払い
     cost =  usingCard.cost
     if bd.moveAreaVal(usePlayer.flare, areas.dust, cost) == -1:
-        print("フレア不足")
+        myp.printError("フレアが不足している")
         return -1        
     
     result = usingCard.use(usePlayer, usedPlayer, areas) # カード使用
     if result == -1: # 失敗時(間合不適合など)
-        print("カード使用が出来ない")
+        myp.printError("そのカードは使用出来ない")
         return -1
     else:
         usePlayer.chgCardS(cardID, 1) # 使用済へ変更
         usePlayer.flagUsedCard = True
         if usingCard.subType == 2:
-            print("全力札を解決した")
+            myp.printDebag("全力札を解決した")
             usePlayer.flagThroughout = True
         return 1
 
@@ -211,7 +212,7 @@ def useCardSpecial(usePlayer, usedPlayer, areas, cardID):
 def basicAction(usePlayer, areas, actionID, costID):
     # 集中力があるかの確認
     if costID == 7 and usePlayer.vigor == 0:
-        print("集中力がありません")
+        myp.printError("集中力がない")
         return -1
     
     # 動作の中身
@@ -228,7 +229,7 @@ def basicAction(usePlayer, areas, actionID, costID):
         done = bd.moveAreaVal(usePlayer.aura, usePlayer.flare, 1)
     
     if done == -1: # 処理できなかった
-        print("結晶の移動が不可能")
+        myp.printError("結晶の移動が不可能")
         return -1
 
     # 消費を払う

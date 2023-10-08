@@ -1,3 +1,5 @@
+import MyPrint as myp
+
 # 領域関連
 # 領域クラス
 # 現在値(初期値)と最大値を格納
@@ -25,17 +27,17 @@ def moveAreaVal(areaA, areaB, n, log=True):
         chgAreaVal(areaA, n)
         return -1
     if log == True: # 移動ログ
-        print(f"{areaA.name} →{n}→ {areaB.name}")
+        myp.printMove(f"{areaA.name} →{n}→ {areaB.name}")
     return n
 
 # 結晶を「できる限り」n個まで移動させる関数 A→n→B
 # 返値：移動個数
 def moveAreaValPoss(areaA, areaB, n):
     for i in range(n): # n回1つづつ移動
-        if(moveAreaVal(areaA, areaB, 1, log=False) == 0): # 移動不可なら
-            print(f"{areaA.name} →{i}→ {areaB.name}")
+        if(moveAreaVal(areaA, areaB, 1, log=False) == -1): # 移動不可なら
+            myp.printMove(f"{areaA.name} →{i}→ {areaB.name}")
             return i
-    print(f"{areaA.name} →{n}→ {areaB.name}") 
+    myp.printMove(f"{areaA.name} →{n}→ {areaB.name}") 
     return n
 
 # 表示関数

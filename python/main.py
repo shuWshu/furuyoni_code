@@ -2,6 +2,7 @@ import board as bd
 import cardList
 import player as pl
 import commonProcess as cp
+import MyPrint as myp
 
 # ---------- 関数定義 ----------
 # ----- ゲームの流れ -----
@@ -39,7 +40,7 @@ def mainPhase(turnID):
     while(1):
         if turnPlayer.flagThroughout == True: # 全力札を使用した
             turnPlayer.flagThroughout = False
-            print("ターンエンド")
+            myp.printLog("ターンエンド")
             break
 
         message = "[メインフェイズ] 行動を選択"
@@ -66,7 +67,7 @@ def mainPhase(turnID):
         elif orderIndex == 2: # 基本動作
             # コスト支払い
             if(not turnPlayer.hand and turnPlayer.vigor == 0): # コスト無し判定
-                print("コストがありません")
+                myp.printError("コストがありません")
             else:
                 # TODO:コスト選択を同じ引数に入れたい気がする
                 messageCost = "[基本動作コスト] コストを選択"
@@ -78,12 +79,12 @@ def mainPhase(turnID):
                 tokensCost = cp.checkToken(messageCost, ["chooseCost"], argListListCost)
                 cp.basicAction(turnPlayer, areas, tokens[1], tokensCost[1])
         elif orderIndex == 3: # ターンエンド
-            print("ターンエンド")
+            myp.printLog("ターンエンド")
             break
 # 敗北処理
 # TODO:ちゃんと作る
 def lose(playerID): 
-    print(f"player {playerID}: LOSE")
+    myp.printLog(f"player {playerID}: LOSE")
 
 # ----- 定義 -----
 # 結晶領域定義
