@@ -20,11 +20,10 @@ def damage(player, area, n, areas):
 
 # ダメージ処理関数用クラス
 # 使用前にsetConfigを使うこと!!
-# 
 class InflictDamage:
     def __init__(self):
-        self.dust = None
-        self.loseFunc = None
+        self.dust = None # ダスト
+        self.loseFunc = None # 敗北時処理
     # 引数: ダスト領域, 負け時の処理
     def setConfig(self, dust, loseFunc):
         self.dust = dust
@@ -58,7 +57,7 @@ def impatience(player):
         inflictDamage.life(player, 1)
 
 # トークン照合 トークンが違うならループする
-# 引数: 表示メッセージ, 正解命令リスト, 引数リストのリスト
+# 引数: 表示メッセージ, 正解命令リスト, 引数リストのリスト(無しならNone)
 # 返値: トークン(str), 引数(int 無しなら-1)
 def checkToken(message, orderList, argListList):
     while(1):
@@ -67,11 +66,13 @@ def checkToken(message, orderList, argListList):
         order = token[0]
         if order in orderList:
             index = orderList.index(order)
-            if not argListList[index]: # 引数無しで良い場合
+            if argListList[index] is None: # 引数無しで良い場合
                 return order, -1
-            if len(token) != 2:
+            elif not argListList[index]: # 引数が空
+                myp.printError("その命令は選択できない")
+            elif len(token) != 2: # 引数の数が正しくない
                 myp.printError("引数の数が正しくない")
-            else:
+            else: # 引数有り
                 try: 
                     if int(token[1]) in argListList[index]:
                         return order, int(token[1])
@@ -260,16 +261,17 @@ def useCardSpecial(usePlayer, usedPlayer, areas, cardID, reaction = False, attac
 # アクションID: 0:前進 1:離脱 2:後退 3:纏い 4:宿し
 # 返値: 成功:1 失敗:-1
 def basicAction(usePlayer, areas, actionID, costID):
-    # 集中力があるかの確認
-    if costID == 7 and usePlayer.vigor == 0:
-        myp.printError("集中力がない")
-        return -1
-    
     # 動作の中身
     done = 0
     if actionID == 0: # 前進
+        if areas.distance.val <= 2:
+            myp.printError("達人の間合以内である")
+            return -1
         done = bd.moveAreaVal(areas.distance, usePlayer.aura, 1)
     elif actionID == 1: # 離脱
+        if areas.distance.val > 2:
+            myp.printError("達人の間合より遠い")
+            return -1
         done = bd.moveAreaVal(areas.dust, areas.distance, 1)
     elif actionID == 2: # 後退
         done = bd.moveAreaVal(usePlayer.aura, areas.distance, 1)

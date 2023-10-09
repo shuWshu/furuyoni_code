@@ -35,32 +35,40 @@ def endPhase(turnID):
         handText += "\n"
         tokens = cp.checkToken(handText, ["discard"], [turnPlayer.hand])
         turnPlayer.moveCardN(tokens[1], 3)
+    
+    # フラグリセット
+    turnPlayer.flagThroughout = False
+    turnPlayer.flagUsedBasic = False
+    turnPlayer.flagUsedCard = False
 
 # メインフェイズ
 def mainPhase(turnID):
     turnPlayer = players[turnID]
     otherPlayer = players[(turnID + 1) % 2]
     while(1):
+        bd.outputBoard(areas)
+
         if turnPlayer.flagThroughout == True: # 全力札を使用した
-            turnPlayer.flagThroughout = False
             myp.printLog("ターンエンド")
             break
 
         message = "[メインフェイズ] 行動を選択"
         message += "\nuseNomal "
+        useableCard = ""
         for id in turnPlayer.hand:
-            message += f"{id}:{turnPlayer.cardListN[id][0].name} "
+            useableCard += f"{id}:{turnPlayer.cardListN[id][0].name} "
+        message += useableCard
         message += "\nuseSpecial "
         usableSpecial = []
         for id, card in enumerate(turnPlayer.cardListS):
             if(card[1] == 0):
                 message += f"{id}:{card[0].name} "
                 usableSpecial.append(id)
-        message += "\nbasicAction 0:前進 1:離脱 2:後退 3:纏い 4:宿し"
+        message += f"\nbasicAction {useableCard}7:集中力({turnPlayer.vigor}/2)"
         message += "\nturnEnd\n"
         
         orderList = ["useNomal" , "useSpecial" , "basicAction"  , "turnEnd"]
-        argListList = [turnPlayer.hand, usableSpecial, [0, 1, 2, 3, 4], []]
+        argListList = [turnPlayer.hand, usableSpecial, turnPlayer.hand + [7], None]
         tokens = cp.checkToken(message, orderList, argListList)
         orderIndex = orderList.index(tokens[0])
         if orderIndex == 0: # 通常札使用
@@ -68,19 +76,12 @@ def mainPhase(turnID):
         elif orderIndex == 1: # 切札使用
             cp.useCardSpecial(turnPlayer, otherPlayer, areas, tokens[1])
         elif orderIndex == 2: # 基本動作
-            # コスト支払い
-            if(not turnPlayer.hand and turnPlayer.vigor == 0): # コスト無し判定
-                myp.printError("コストがありません")
+            # 集中力があるかの確認
+            if tokens[1] == 7 and turnPlayer.vigor == 0:
+                myp.printError("集中力がない")
             else:
-                # TODO:コスト選択を同じ引数に入れたい気がする
-                messageCost = "[基本動作コスト] コストを選択"
-                messageCost += "\nchooseCost "
-                for id in turnPlayer.hand:
-                    messageCost += f"{id}:{turnPlayer.cardListN[id][0].name} "
-                messageCost += f"7:集中力({turnPlayer.vigor}/2)\n"
-                argListListCost = [turnPlayer.hand + [7]]
-                tokensCost = cp.checkToken(messageCost, ["chooseCost"], argListListCost)
-                cp.basicAction(turnPlayer, areas, tokens[1], tokensCost[1])
+                tokensAction = cp.checkToken("[基本動作] 行う動作を選択\nchooseAction 0:前進 1:離脱 2:後退 3:纏い 4:宿し\n", ["chooseAction"], [[0, 1, 2, 3, 4]])
+                cp.basicAction(turnPlayer, areas, tokensAction[1], tokens[1])
         elif orderIndex == 3: # ターンエンド
             myp.printLog("ターンエンド")
             break
@@ -137,15 +138,17 @@ def overallProcessing(firstID = None, tutorial = False):
     else:
         player_0.reshuffle()
         player_1.reshuffle()
-        if firstID == None:
+        if firstID is None:
             firstID = random.randint(0, 1)
     secondID = (firstID + 1) % 2
 
     # 手札と集中
-    for i in range(3):
-        player_0.drawCard()
-        player_1.drawCard()
+    # for i in range(3):
+    #     player_0.drawCard()
+    #     player_1.drawCard()
     players[secondID].chgVigor(1)
+
+    bd.outputBoard(areas)
     
     turnCount = 1
     # 先手最初のターン

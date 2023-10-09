@@ -41,7 +41,7 @@ class Card:
     
     # 効果の使用
     def use(self, usePlayer, usedPlayer, areas, attackData=None):
-        if attackData == None:
+        if attackData is None:
             myp.printDebag(f"「{self.name}」の使用を宣言")
             return self.function(usePlayer, usedPlayer, areas)
         else:

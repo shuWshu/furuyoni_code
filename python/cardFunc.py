@@ -40,7 +40,7 @@ def YaminagiNoKoe(usePlayer, usedPlayer, areas):
 # 苦の外套
 def KuNoGaito(usePlayer, usedPlayer, areas, attackData=None):
     # 対応した《攻撃》は-2/+0となる。
-    if attackData != None:
+    if attackData is not None:
         cp.damageCorrection(attackData.damage, [-2, 0])
     # 相オーラ →2→ ダスト
     bd.moveAreaValPoss(usedPlayer.aura, areas.dust, 2)
@@ -68,7 +68,7 @@ def SakurahubukiNoKeshiki(usePlayer, usedPlayer, areas):
 
 # 精霊たちの風
 def SeireitatiNoKaze(usePlayer, usedPlayer, areas, attackData=None):
-    if attackData != None:
+    if attackData is not None:
         # 対応した切札でない《攻撃》を打ち消す。
         if attackData.Class != 1:
             attackData.canceled = True
@@ -96,7 +96,7 @@ def MakeKaeshigiri(card):
         result = cp.attack(usePlayer, usedPlayer, areas, card.dist, card.Damage, card.Class, card.subType, card.megami)
         if result == 1:
             #【攻撃後】このカードを対応で使用したならば ダスト →1→ 自オーラ
-            if attackData != None:
+            if attackData is not None:
                 bd.moveAreaValPoss(areas.dust, usePlayer.aura, 1)
         return result
     return Kaeshigiri
