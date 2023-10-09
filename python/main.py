@@ -162,6 +162,7 @@ def overallProcessing(firstID = None, tutorial = False):
         startPhase(firstID)
         mainPhase(firstID)
         endPhase(firstID)
+        # 後手ターン
         myp.printDebag(f"後攻{turnCount}ターン目")
         startPhase(secondID)
         mainPhase(secondID)

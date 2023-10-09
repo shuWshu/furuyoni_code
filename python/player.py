@@ -41,7 +41,8 @@ class Player:
         self.vigor += n
         if(self.vigor > 2 or self.vigor < 0):
             self.vigor -= n
-            return -1; 
+            return -1
+        myp.printMove(f"{self.name} 集中力: {self.vigor - n} → {self.vigor}")
         return self.vigor
     # 再構成
     def reshuffle(self):
