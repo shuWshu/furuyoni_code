@@ -24,7 +24,7 @@ def Hohou(usePlayer, usedPlayer, areas):
     return 1
 
 # 潜り
-def Moguri(usePlayer, usedPlayer, areas, reaction=False):
+def Moguri(usePlayer, usedPlayer, areas, attackData=None):
     # 間合 →1→ ダスト
     bd.moveAreaValPoss(areas.distance, areas.dust, 1)
     return 1
@@ -37,9 +37,10 @@ def YaminagiNoKoe(usePlayer, usedPlayer, areas):
     return 1
 
 # 苦の外套
-def KuNoGaito(usePlayer, usedPlayer, areas, reaction=False):
-    # TODO:対応による減算処理どうしよう
+def KuNoGaito(usePlayer, usedPlayer, areas, attackData=None):
     # 対応した《攻撃》は-2/+0となる。
+    if attackData != None:
+        cp.damageCorrection(attackData.damage, [-2, 0])
     # 相オーラ →2→ ダスト
     bd.moveAreaValPoss(usedPlayer.aura, areas.dust, 2)
     return 1

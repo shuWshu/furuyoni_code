@@ -21,23 +21,28 @@ def chgAreaVal(area, n):
 # 結晶をn個移動させる関数 A→n→B
 # 返値：移動個数, 失敗時-1
 def moveAreaVal(areaA, areaB, n, log=True):
+    areaAprev = areaA.val
+    areaBprev = areaB.val
     if(chgAreaVal(areaA, -n) == -1): # 失敗した場合
         return -1
     if(chgAreaVal(areaB, n) == -1): # 失敗した場合
         chgAreaVal(areaA, n)
         return -1
     if log == True: # 移動ログ
-        myp.printMove(f"{areaA.name} →{n}→ {areaB.name}")
+        myp.printMove(f"{areaA.name}({areaAprev}→{areaA.val}) →{n}→ {areaB.name}({areaBprev}→{areaB.val})")
     return n
 
 # 結晶を「できる限り」n個まで移動させる関数 A→n→B
 # 返値：移動個数
 def moveAreaValPoss(areaA, areaB, n):
+    areaAprev = areaA.val
+    areaBprev = areaB.val
     for i in range(n): # n回1つづつ移動
         if(moveAreaVal(areaA, areaB, 1, log=False) == -1): # 移動不可なら
-            myp.printMove(f"{areaA.name} →{i}→ {areaB.name}")
+            myp.printMove(f"{areaA.name}({areaAprev}→{areaA.val}) →{i}→ {areaB.name}({areaBprev}→{areaB.val})")
             return i
-    myp.printMove(f"{areaA.name} →{n}→ {areaB.name}") 
+    # 全部移動したら↓
+    myp.printMove(f"{areaA.name}({areaAprev}→{areaA.val}) →{n}→ {areaB.name}({areaBprev}→{areaB.val})")
     return n
 
 # 表示関数
@@ -70,5 +75,5 @@ if __name__ == "__main__":
     areas = Areas()
 
     outputBoard(areas)
-    print(moveAreaValPoss(areas.distance, areas.dust, 13))
+    print(moveAreaValPoss(areas.distance, areas.dust, 8))
     outputBoard(areas)

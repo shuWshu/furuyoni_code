@@ -35,15 +35,19 @@ class Card:
         # カードの処理
         # カード特有の挙動
         self.function = func
-        if self.function is None and self.mainType == 0:
-            def commonAttack(usePlayer, usedPlayer, areas):
-                return cp.attack(usePlayer, usedPlayer, areas, self.dist, self.Damage)
+        if self.function is None and self.mainType == 0: # 攻撃カードの汎用処理
+            def commonAttack(usePlayer, usedPlayer, areas, attackData=None):
+                return cp.attack(usePlayer, usedPlayer, areas, self.dist, self.Damage, self.Class, self.subType, self.megami)
             self.function = commonAttack
         
     # 効果の使用
-    def use(self, usePlayer, usedPlayer, areas):
-        myp.printDebag("「" + self.name + "」を使用")
-        return self.function(usePlayer, usedPlayer, areas)
+    def use(self, usePlayer, usedPlayer, areas, attackData=None):
+        if attackData == None:
+            myp.printDebag(f"「{self.name}」の使用を宣言")
+            return self.function(usePlayer, usedPlayer, areas)
+        else:
+            myp.printDebag(f"「{self.name}」の対応使用を宣言")
+            return self.function(usePlayer, usedPlayer, areas, attackData=attackData)
 
 
 # n字インデントを下げる関数

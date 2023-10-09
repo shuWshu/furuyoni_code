@@ -89,18 +89,38 @@ def checkDist(dist, cardDist):
     if dist in cardDist: # 当たった場合
         return 1
     else:
-        myp.printError("適正距離が不適合")
-        return -1
-
-# 攻撃処理
-# 引数: 使用者, 被使用者, ボードデータ, 適正距離[], ダメージ[], 対応不可TF
-# 返値: 成功時:1, 失敗時(打消,回避など):0, 不成立時:-1
-def attack(usePlayer, usedPlayer, areas, cardDist, damage, noReaction=False):
-    # 間合確認
-    if checkDist(areas.distance.val, cardDist) != 1: # 避けられた場合
         return -1
     
-    # ダメージ選択 or 対応
+# 攻撃情報オブジェクト
+class AttackData:
+    def __init__(self, Class, subType, dist, Damage, megami):
+        self.Class = Class
+        self.subType = subType
+        self.dist = dist
+        self.damage = Damage
+        self.megami = megami
+        self.canceled = False
+
+# 攻撃処理
+# 引数: 使用者, 被使用者, ボードデータ, 適正距離[], ダメージ[], 通常or切札, サブタイプ, メガミ名, 対応不可TF
+# 返値: 成功時:1, 失敗時(打消,回避など):0, 不成立時:-1
+def attack(usePlayer, usedPlayer, areas, cardDist, damage, cardClass, subType, megamiName, noReaction=False):
+    # 攻撃オブジェクトの作成
+    attackData = AttackData(cardClass, subType, cardDist, damage, megamiName)
+    distMax = max(attackData.dist)
+    distMin = min(attackData.dist)
+    if distMax == distMin:
+        dist = str(distMax)
+    else:
+        dist = str(distMin) + "-" + str(distMax)
+    myp.printDebag(f"攻撃{dist} {attackData.damage[0]}/{attackData.damage[1]}を使用")
+    # 間合確認
+    if checkDist(areas.distance.val, attackData.dist) != 1: # 避けられた場合
+        myp.printError("適正距離が不適合")
+        return -1
+    
+    
+    # 対応メッセージ作成
     message = "[《攻撃》への対応 ] 行動を選択"
     message += "\ndamageBy 0:オーラ 1:ライフ"
     orderList = ["damageBy"]
@@ -118,34 +138,46 @@ def attack(usePlayer, usedPlayer, areas, cardDist, damage, noReaction=False):
         orderList = ["damageBy" , "reactionNomal" , "reactionSpecial"]
         argListList = [[0, 1], usedPlayer.hand, usableSpecial]
     message += "\n"
-    tokens = checkToken(message, orderList, argListList)
-    orderIndex = orderList.index(tokens[0])
 
-    # 対応使用
-    if orderIndex != 0:
-        if orderIndex == 1:
-            # TODO:カードの使用
-            print(tokens)
-        elif orderIndex == 2:
-            # TODO:カードの使用
-            print(tokens)
+    while(1):
+        # ダメージ選択 or 対応
+        tokens = checkToken(message, orderList, argListList)
+        orderIndex = orderList.index(tokens[0])
 
-        # 間合確認
-        if checkDist(areas.distance.val, cardDist) != 1: # 避けられた場合
-            return 0
-        # ダメージ選択
-        argListList = [[0, 1], usedPlayer.hand, usableSpecial]
-        tokens = checkToken("[《攻撃》ダメージ選択 ]\ndamageBy 0:オーラ 1:ライフ\n", ["damageBy"], [[0, 1]])
+        # 対応使用
+        if orderIndex == 0: # 対応しない
+            break
+        else: # 対応した
+            if orderIndex == 1:
+                reactionFunc = useCardNomal(usedPlayer, usePlayer, areas, tokens[1], reaction=True, attackData=attackData)
+            elif orderIndex == 2:
+                reactionFunc = useCardSpecial(usedPlayer, usePlayer, areas, tokens[1], reaction=True, attackData=attackData)
+            if reactionFunc != -1: # 対応使用成功
+                if attackData.canceled == True: # 打消
+                    return 0
+                # 間合確認
+                if checkDist(areas.distance.val, attackData.dist) != 1: # 避けられた場合
+                    myp.printDebag("適正距離が不適合(回避)")
+                    return 0
+                # ダメージ選択
+                tokens = checkToken("[《攻撃》ダメージ選択 ]\ndamageBy 0:オーラ 1:ライフ\n", ["damageBy"], [[0, 1]])
+                break
+    
     # ダメージ処理
-    if usedPlayer.aura.val < damage[0] or damage[0] == -1: # オーラが少ない or オーラダメージが-
-        inflictDamage.life(usedPlayer, damage[1])
-    elif damage[1] == -1: # ライフダメージが-
-        inflictDamage.life(usedPlayer, damage[0])
+    if usedPlayer.aura.val < attackData.damage[0]: # オーラが少ない
+        myp.printDebag("オーラが不足している")
+        inflictDamage.life(usedPlayer, attackData.damage[1])
+    elif attackData.damage[0] == -1: # オーラダメージが-
+        myp.printDebag("オーラダメージが-")
+        inflictDamage.life(usedPlayer, attackData.damage[1])
+    elif attackData.damage[1] == -1: # ライフダメージが-
+        myp.printDebag("ライフダメージが-")
+        inflictDamage.life(usedPlayer, attackData.damage[0])
     else:
         if tokens[1] == 0:
-            inflictDamage.aura(usedPlayer, damage[0])
+            inflictDamage.aura(usedPlayer, attackData.damage[0])
         else:
-            inflictDamage.life(usedPlayer, damage[1])
+            inflictDamage.life(usedPlayer, attackData.damage[1])
     return 1
         
 # ドロー処理
@@ -159,14 +191,23 @@ def draw(player):
 
 # 通常札の使用
 # カード使用の前後共通処理のみ
-# 引数: 使用者, 被使用者, ボード情報, カードid
-# 返値: 成功:1 不成立:-1
-def useCardNomal(usePlayer, usedPlayer, areas, cardID):
+# 引数: 使用者, 被使用者, ボード情報, カードid, 対応フラグ, 対応時の攻撃情報
+# 返値: 成功:1 不成立:-1 対応の場合
+def useCardNomal(usePlayer, usedPlayer, areas, cardID, reaction = False, attackData = None):
     usingCard = usePlayer.cardListN[cardID][0]
-    if usingCard.subType == 2 and (usePlayer.flagUsedCard or usePlayer.flagUsedBasic):
+    if usingCard.subType == 2 and (usePlayer.flagUsedCard or usePlayer.flagUsedBasic): # 全力札使用判定
         myp.printError("このターン中は全力札を使えない")
         return -1
-    result = usingCard.use(usePlayer, usedPlayer, areas) # カード使用
+    #カードの使用部分
+    result = -1
+    if reaction == False:
+        result = usingCard.use(usePlayer, usedPlayer, areas) # カード使用
+    else:
+        if usingCard.subType != 1:
+            myp.printError("そのカードは対応ではない")
+            return -1
+        result = usingCard.use(usePlayer, usedPlayer, areas, attackData = attackData) # 対応使用
+
     if result == -1: # 失敗時(間合不適合など)
         myp.printError("そのカードは使用出来ない")
         return -1
@@ -180,9 +221,9 @@ def useCardNomal(usePlayer, usedPlayer, areas, cardID):
     
 # 切札の使用
 # カード使用の前後処理のみ
-# 引数: 使用者, 被使用者, ボード情報, カードid
+# 引数: 使用者, 被使用者, ボード情報, カードid, 対応フラグ, 対応時の攻撃情報
 # 返値: 成功:1 不成立:-1
-def useCardSpecial(usePlayer, usedPlayer, areas, cardID):
+def useCardSpecial(usePlayer, usedPlayer, areas, cardID, reaction = False, attackData = None):
     usingCard = usePlayer.cardListS[cardID][0]
     if usingCard.subType == 2 and (usePlayer.flagUsedCard or usePlayer.flagUsedBasic):
         myp.printError("このターン中は全力札を使えない")
@@ -193,11 +234,20 @@ def useCardSpecial(usePlayer, usedPlayer, areas, cardID):
         myp.printError("フレアが不足している")
         return -1        
     
-    result = usingCard.use(usePlayer, usedPlayer, areas) # カード使用
+    #カードの使用部分
+    result = -1
+    if reaction == False:
+        result = usingCard.use(usePlayer, usedPlayer, areas) # カード使用
+    else:
+        if usingCard.subType != 1:
+            myp.printError("そのカードは対応ではない")
+            return -1
+        result = usingCard.use(usePlayer, usedPlayer, areas, attackData = attackData) # 対応使用
+
     if result == -1: # 失敗時(間合不適合など)
         myp.printError("そのカードは使用出来ない")
         return -1
-    else:
+    else: # 成功or攻撃打消など
         usePlayer.chgCardS(cardID, 1) # 使用済へ変更
         usePlayer.flagUsedCard = True
         if usingCard.subType == 2:
@@ -239,3 +289,17 @@ def basicAction(usePlayer, areas, actionID, costID):
         usePlayer.moveCardN(costID, 3) # 伏札へ移動
     usePlayer.flagUsedBasic = True
     return 1
+
+# ダメージ補正処理
+# 引数: ダメージ配列, 補正配列
+def damageCorrection(damage, correction):
+    damageBefore = f"{damage[0]}/{damage[1]}"
+    for i in range(2):
+        if damage[i] >= 0:
+            damage[i] += correction[i]
+            if damage[i] < 0:
+                damage[i] = 0
+    myp.printDebag(f"{damageBefore} →({correction[0]}/{correction[1]})→ {damage[0]}/{damage[1]}")
+    return damage
+
+    

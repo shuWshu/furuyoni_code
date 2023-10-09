@@ -5,6 +5,7 @@ import cardList
 import MyPrint as myp
 
 cardPosNames = ["山札", "手札", "捨札", "伏札", "付与札"]
+cardStateNames = ["未使用", "使用済"]
 
 # 各プレイヤー紐付け情報
 class Player:
@@ -72,14 +73,25 @@ class Player:
         elif(area == 2 or area == 3): # 捨伏札にある
             self.discard.append(id) # 捨伏リストへ追加
         self.cardListN[id][1] = area
-        myp.printMove("「" + self.cardListN[id][0].name + "」 " + cardPosNames[prevArea] + " → " + cardPosNames[area])
+        if prevArea != area:
+            myp.printMove(f"「{self.cardListN[id][0].name}」 {cardPosNames[prevArea]} → {cardPosNames[area]}")
+        else:
+            myp.printDebag(f"「{self.cardListN[id][0].name}」は移動しなかった")
     # 切札状態変更
     # 引数: カードid, 状態(-1なら逆にする, 0or1で指定)
     def chgCardS(self, id, state = -1):
+        prevState = self.cardListS[id][1]
+        afterState = 0
         if(state == -1):
-            self.cardListS[id][1] = (self.cardListS[id][1] + 1) % 2
+            afterState = (prevState + 1) % 2
         else:
-            self.cardListS[id][1] = state
+            afterState = state
+        self.cardListS[id][1] = afterState
+        if prevState != afterState:
+            myp.printMove(f"「{self.cardListS[id][0].name}」 {cardStateNames[prevState]} → {cardStateNames[afterState]}")
+        else:
+            myp.printDebag(f"「{self.cardListS[id][0].name}」の状態は変化しなかった")
+
     # ドロー処理
     # 返値: 成功なら引いたカードid, 失敗なら-1
     # 2023/09/09 処理をmoveCardNに変更

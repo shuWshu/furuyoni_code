@@ -41,3 +41,8 @@ print("初期 life:", player.life.val)
 player.life.val = 8
 print("変更後 life:", player.life.val)
 player.life.val = 15  # 範囲外の値をセットしようとするとエラーが表示される
+
+x = [1, 2]
+z = [3, 4]
+x = z
+print(x)

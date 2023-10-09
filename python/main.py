@@ -33,6 +33,7 @@ def endPhase(turnID):
         handText += "\n"
         tokens = cp.checkToken(handText, ["discard"], [turnPlayer.hand])
         turnPlayer.moveCardN(tokens[1], 3)
+
 # メインフェイズ
 def mainPhase(turnID):
     turnPlayer = players[turnID]
@@ -102,18 +103,25 @@ players = [player_0, player_1]
 cp.inflictDamage.setConfig(areas.dust, lose)
 
 if __name__ == "__main__":
-    players[0].moveCardN(1, 1)
+    players[0].moveCardN(0, 1)
+    players[0].moveCardN(1, 0)
     players[0].moveCardN(2, 3)
     players[0].moveCardN(3, 2)
     players[0].moveCardN(4, 1)
     players[0].moveCardN(5, 1)
     players[0].moveCardN(6, 1)
+    players[0].chgCardS(1, 0)
     players[0].chgCardS(1, -1)
-    bd.moveAreaVal(areas.distance, areas.flare_0, 8)
+    players[1].moveCardN(0, 1)
+    players[1].moveCardN(1, 1)
+    players[1].moveCardN(2, 1)
+    players[1].moveCardN(3, 1)
+    bd.moveAreaVal(areas.distance, areas.flare_0, 7)
+    bd.moveAreaVal(areas.flare_0, areas.dust, 6)
     bd.outputBoard(areas)
     pl.outputPlayerCard(players[0])
 
-    mainPhase(0)
+    mainPhase(1)
 
     # d = cp.useCardSpecial(players[0], players[1], areas, 1)
     # print(f"return:{d}")
