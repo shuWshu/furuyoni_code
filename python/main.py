@@ -1,3 +1,4 @@
+import random
 import board as bd
 import cardList as cl
 import cardFunc as cf
@@ -84,9 +85,9 @@ def mainPhase(turnID):
             myp.printLog("ターンエンド")
             break
 # 敗北処理
-# TODO:ちゃんと作る
-def lose(playerID): 
+def lose(playerID):
     myp.printLog(f"player {playerID}: LOSE")
+    exit()
 
 # ----- 定義 -----
 # 結晶領域定義
@@ -126,7 +127,47 @@ cl.card_HS3.setFunc(cf.SeireitatiNoKaze)
 # インポート関数定義
 cp.inflictDamage.setConfig(areas.dust, lose)
 
-if __name__ == "__main__":
+# ゲーム全体処理
+def overallProcessing(firstID = None, tutorial = False):
+    # デッキ設計
+    if tutorial:
+        player_0.deck = [0, 3, 6, 4, 5, 1, 2]
+        player_1.deck = [0, 2, 4, 1, 3, 5, 6]
+        firstID = 0
+    else:
+        player_0.reshuffle()
+        player_1.reshuffle()
+        if firstID == None:
+            firstID = random.randint(0, 1)
+    secondID = (firstID + 1) % 2
+
+    # 手札と集中
+    for i in range(3):
+        player_0.drawCard()
+        player_1.drawCard()
+    players[secondID].chgVigor(1)
+    
+    turnCount = 1
+    # 先手最初のターン
+    myp.printDebag(f"先攻{turnCount}ターン目")
+    mainPhase(firstID)
+    endPhase(firstID)
+    myp.printDebag(f"後攻{turnCount}ターン目")
+    mainPhase(secondID)
+    endPhase(secondID)
+    while(1):
+        turnCount += 1
+        # 先手ターン
+        myp.printDebag(f"先攻{turnCount}ターン目")
+        startPhase(firstID)
+        mainPhase(firstID)
+        endPhase(firstID)
+        myp.printDebag(f"後攻{turnCount}ターン目")
+        startPhase(secondID)
+        mainPhase(secondID)
+        endPhase(secondID)
+
+def testCode():
     players[0].moveCardN(0, 1)
     players[0].moveCardN(1, 0)
     players[0].moveCardN(2, 3)
@@ -152,3 +193,6 @@ if __name__ == "__main__":
 
     bd.outputBoard(areas)
     pl.outputPlayerCard(players[0])
+
+if __name__ == "__main__":
+    overallProcessing(tutorial=True)

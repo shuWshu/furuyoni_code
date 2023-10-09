@@ -73,7 +73,7 @@ def SeireitatiNoKaze(usePlayer, usedPlayer, areas, attackData=None):
         if attackData.Class != 1:
             attackData.canceled = True
     # カードを1枚引く。
-    usePlayer.drawCard()
+    cp.draw(usePlayer)
     return 1
 
 # 引数にカード情報を得て処理を登録する場合
@@ -90,6 +90,7 @@ def MakeNoReaction(card):
         return cp.attack(usePlayer, usedPlayer, areas, card.dist, card.Damage, card.Class, card.subType, card.megami, noReaction=True)
     return NoReaction
 
+# 返し斬り
 def MakeKaeshigiri(card):
     def Kaeshigiri(usePlayer, usedPlayer, areas, attackData=None):
         result = cp.attack(usePlayer, usedPlayer, areas, card.dist, card.Damage, card.Class, card.subType, card.megami)
