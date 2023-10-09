@@ -1,5 +1,4 @@
 import commonProcess as cp
-import cardFunc
 import MyPrint as myp
 
 # クラス定義
@@ -8,7 +7,7 @@ class Card:
     # 攻撃:[[間合], [オーラダメージ, ライフダメージ]]
     # 行動:[]
     # 付与:[納]
-    def __init__(self, Class, name, num, megami, megamiNo, version, mainType, subType, text, parameter, cost = 0, func=None) -> None:
+    def __init__(self, Class, name, num, megami, megamiNo, version, mainType, subType, text, parameter, cost = 0) -> None:
         self.Class = Class # 通常:0, 切札:1
         self.name = name # カード名 string
         self.num = num # カードナンバー int
@@ -31,15 +30,15 @@ class Card:
             self.cardNo += f"N_{self.num}"
         elif(self.Class == 1):
             self.cardNo += f"S_{self.num}"
-
-        # カードの処理
-        # カード特有の挙動
+        def initialFunc(usePlayer, usedPlayer, areas, attackData=None):
+            myp.printError("関数が設定されていない")
+            return -1
+        self.function = initialFunc
+    
+    # 処理の登録
+    def setFunc(self, func):
         self.function = func
-        if self.function is None and self.mainType == 0: # 攻撃カードの汎用処理
-            def commonAttack(usePlayer, usedPlayer, areas, attackData=None):
-                return cp.attack(usePlayer, usedPlayer, areas, self.dist, self.Damage, self.Class, self.subType, self.megami)
-            self.function = commonAttack
-        
+    
     # 効果の使用
     def use(self, usePlayer, usedPlayer, areas, attackData=None):
         if attackData == None:
@@ -135,13 +134,13 @@ card_UN2 = Card(0, "脇斬り", 2, "hajimari", 0, "a", 0, 0, "", [[2, 3], [2, 2]
 card_UN3 = Card(0, "牽制", 3, "hajimari", 0, "a", 0, 0, "", [[1, 2, 3], [2, 1]])
 card_UN4 = Card(0, "背中刺し", 4, "hajimari", 0, "a", 0, 0, "", [[1], [3, 2]])
 card_UN5 = Card(0, "二刀一閃", 5, "hajimari", 0, "a", 0, 2, "", [[2, 3], [4, 2]])
-card_UN6 = Card(0, "歩法", 6, "hajimari", 0, "a", 1, 0, "集中力を1得る。\n間合 ←1→ ダスト", [], func=cardFunc.Hohou)
-card_UN7 = Card(0, "潜り", 7, "hajimari", 0, "a", 1, 1, "間合 →1→ ダスト", [], func=cardFunc.Moguri)
+card_UN6 = Card(0, "歩法", 6, "hajimari", 0, "a", 1, 0, "集中力を1得る。\n間合 ←1→ ダスト", [])
+card_UN7 = Card(0, "潜り", 7, "hajimari", 0, "a", 1, 1, "間合 →1→ ダスト", [])
 card_UN8 = Card(0, "患い", 8, "hajimari", 0, "a", 1, 1, "対応した<攻撃>は-1/+0される。\n相手を萎縮させる。", [])
 card_UN9 = Card(0, "陰の罠", 9, "hajimari", 0, "a", 2, 0, "隙\n【破棄時】攻撃「適正距離2-3、3/2、対応不可」を行う。", [2])
 card_US1 = Card(1, "数多ノ刃", 1, "hajimari", 0, "a", 0, 0, "", [[1, 2], [4, 3]], 5)
-card_US2 = Card(1, "闇凪ノ声", 2, "hajimari", 0, "a", 1, 0, "カードを2枚引く。", [], 4, func=cardFunc.YaminagiNoKoe)
-card_US3 = Card(1, "苦ノ外套", 3, "hajimari", 0, "a", 1, 1, "対応した《攻撃》は-2/+0となる。\n相オーラ →2→ ダスト", [], 3, func=cardFunc.KuNoGaito)
+card_US2 = Card(1, "闇凪ノ声", 2, "hajimari", 0, "a", 1, 0, "カードを2枚引く。", [], 4)
+card_US3 = Card(1, "苦ノ外套", 3, "hajimari", 0, "a", 1, 1, "対応した《攻撃》は-2/+0となる。\n相オーラ →2→ ダスト", [], 3)
 card_US4 = Card(1, "奪イノ茨", 4, "hajimari", 0, "a", 1, 2, "相手は手札を全て捨て札にし、集中力が0になる。\n再起:ダストが10以上である。", [], 1)
 card_HN1 = Card(0, "花弁刃", 1, "hajimari", 0, "b", 0, 0, "", [[4, 5], [-1, 1]])
 card_HN2 = Card(0, "桜刀", 2, "hajimari", 0, "b", 0, 0, "", [[3, 4], [3, 1]])
@@ -153,7 +152,7 @@ card_HN7 = Card(0, "光輝収束", 7, "hajimari", 0, "b", 1, 2, "ダスト →2�
 card_HN8 = Card(0, "光の刃", 8, "hajimari", 0, "b", 0, 0, "超克\n【常時】Xはあなたのフレアに等しい。", [[3, 4, 5], [-2, 1]])
 card_HN9 = Card(0, "精霊連携", 9, "hajimari", 0, "b", 2, 2, "【展開中】あなたの《攻撃》は+1/+0となる。", [3])
 card_HS1 = Card(1, "光満ちる一刀", 1, "hajimari", 0, "b", 0, 0, "", [[3, 4], [4, 3]], 5)
-card_HS2 = Card(1, "花吹雪の景色", 2, "hajimari", 0, "b", 1, 0, "相オーラ →2→ ダスト", [], 4)
+card_HS2 = Card(1, "花吹雪の景色", 2, "hajimari", 0, "b", 1, 0, "相オーラ →2→ 間合", [], 4)
 card_HS3 = Card(1, "精霊たちの風", 3, "hajimari", 0, "b", 1, 1, "対応した切札でない《攻撃》を打ち消す。\nカードを1枚引く。", [], 3)
 card_HS4 = Card(1, "煌めきの乱舞", 4, "hajimari", 0, "b", 0, 0, "即再起:あなたが2以上のライフへのダメージを受ける", [[3, 4, 5], [2, 2]], 2)
 

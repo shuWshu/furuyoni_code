@@ -1,5 +1,6 @@
 import commonProcess as cp
 import board as bd
+import cardList as cl
 
 # これ何???
 # 多分テストコード
@@ -44,3 +45,59 @@ def KuNoGaito(usePlayer, usedPlayer, areas, attackData=None):
     # 相オーラ →2→ ダスト
     bd.moveAreaValPoss(usedPlayer.aura, areas.dust, 2)
     return 1
+
+# 桜寄せ
+def Sakurayose(usePlayer, usedPlayer, areas, attackData=None):
+    # 相オーラ →1→ 自オーラ
+    bd.moveAreaValPoss(usedPlayer.aura, usePlayer.aura, 1)
+    return 1
+
+# 光輝収束
+def Koukishusoku(usePlayer, usedPlayer, areas):
+    # ダスト →2→ 自オーラ
+    bd.moveAreaValPoss(areas.dust, usePlayer.aura, 2)
+    # ダスト →1→ 自フレア
+    bd.moveAreaValPoss(areas.dust, usePlayer.flare, 1)
+    return 1
+
+# 桜吹雪の景色
+def SakurahubukiNoKeshiki(usePlayer, usedPlayer, areas):
+    # 相オーラ →2→ 間合
+    bd.moveAreaValPoss(usedPlayer.aura, areas.distance, 2)
+    return 1
+
+# 精霊たちの風
+def SeireitatiNoKaze(usePlayer, usedPlayer, areas, attackData=None):
+    if attackData != None:
+        # 対応した切札でない《攻撃》を打ち消す。
+        if attackData.Class != 1:
+            attackData.canceled = True
+    # カードを1枚引く。
+    usePlayer.drawCard()
+    return 1
+
+# 引数にカード情報を得て処理を登録する場合
+# 攻撃に関わるものが主
+# 攻撃汎用
+def MakeAttack(card):
+    def Attack(usePlayer, usedPlayer, areas):
+        return cp.attack(usePlayer, usedPlayer, areas, card.dist, card.Damage, card.Class, card.subType, card.megami)
+    return Attack
+
+# 対応不可攻撃汎用
+def MakeNoReaction(card):
+    def NoReaction(usePlayer, usedPlayer, areas):
+        return cp.attack(usePlayer, usedPlayer, areas, card.dist, card.Damage, card.Class, card.subType, card.megami, noReaction=True)
+    return NoReaction
+
+def MakeKaeshigiri(card):
+    def Kaeshigiri(usePlayer, usedPlayer, areas, attackData=None):
+        result = cp.attack(usePlayer, usedPlayer, areas, card.dist, card.Damage, card.Class, card.subType, card.megami)
+        if result == 1:
+            #【攻撃後】このカードを対応で使用したならば ダスト →1→ 自オーラ
+            if attackData != None:
+                bd.moveAreaValPoss(areas.dust, usePlayer.aura, 1)
+        return result
+    return Kaeshigiri
+                
+

@@ -1,1 +1,5 @@
-if __name__ == "__main__":
+cl.card_UN1.setFunc(cp.attack(cl.card_UN1))
+# cl.card_UN2.setFunc(cp.attack(cl.card_UN2))
+# cl.card_UN3.setFunc(cp.attack(cl.card_UN3))
+# cl.card_UN4.setFunc(cp.attack(cl.card_UN4))
+# cl.card_UN5.setFunc(cp.attack(cl.card_UN5))

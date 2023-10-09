@@ -1,5 +1,6 @@
 import board as bd
-import cardList
+import cardList as cl
+import cardFunc as cf
 import player as pl
 import commonProcess as cp
 import MyPrint as myp
@@ -92,12 +93,35 @@ def lose(playerID):
 areas = bd.Areas()
 # プレイヤー定義
 player_0 = pl.Player("プレイヤー0", areas.life_0, areas.aura_0, areas.flare_0)
-player_0.setCardList(cardList.cardList_U)
+player_0.setCardList(cl.cardList_U)
 player_1 = pl.Player("プレイヤー1", areas.life_1, areas.aura_1, areas.flare_1)
-player_1.setCardList(cardList.cardList_H)
+player_1.setCardList(cl.cardList_H)
 # プレイヤーグループ
 players = [player_0, player_1]
 # ゲーム全体の領域保存
+
+# カード処理の登録
+cl.card_UN1.setFunc(cf.MakeAttack(cl.card_UN1))
+cl.card_UN2.setFunc(cf.MakeAttack(cl.card_UN2))
+cl.card_UN3.setFunc(cf.MakeAttack(cl.card_UN3))
+cl.card_UN4.setFunc(cf.MakeAttack(cl.card_UN4))
+cl.card_UN5.setFunc(cf.MakeAttack(cl.card_UN5))
+cl.card_UN6.setFunc(cf.Hohou)
+cl.card_UN7.setFunc(cf.Moguri)
+cl.card_US1.setFunc(cf.MakeAttack(cl.card_US1))
+cl.card_US2.setFunc(cf.YaminagiNoKoe)
+cl.card_US3.setFunc(cf.KuNoGaito)
+
+cl.card_HN1.setFunc(cf.MakeAttack(cl.card_HN1))
+cl.card_HN2.setFunc(cf.MakeAttack(cl.card_HN2))
+cl.card_HN3.setFunc(cf.MakeNoReaction(cl.card_HN3))
+cl.card_HN4.setFunc(cf.MakeKaeshigiri(cl.card_HN4))
+cl.card_HN5.setFunc(cf.Hohou)
+cl.card_HN6.setFunc(cf.Sakurayose)
+cl.card_HN7.setFunc(cf.Koukishusoku)
+cl.card_HS1.setFunc(cf.MakeAttack(cl.card_HS1))
+cl.card_HS2.setFunc(cf.SakurahubukiNoKeshiki)
+cl.card_HS3.setFunc(cf.SeireitatiNoKaze)
 
 # インポート関数定義
 cp.inflictDamage.setConfig(areas.dust, lose)
@@ -121,7 +145,7 @@ if __name__ == "__main__":
     bd.outputBoard(areas)
     pl.outputPlayerCard(players[0])
 
-    mainPhase(1)
+    mainPhase(0)
 
     # d = cp.useCardSpecial(players[0], players[1], areas, 1)
     # print(f"return:{d}")
