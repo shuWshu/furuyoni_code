@@ -17,7 +17,7 @@ def startPhase(turnID):
     turnPlayer.chgVigor(1)
     # 付与札処理 # TODO:そのうち作る
     # 再構成
-    tokens = cp.checkToken("[再構成] 行いますか?\nreshuffle 0:しない 1:する\n", ["reshuffle"], [[0, 1]])
+    tokens = cp.checkToken(f"[再構成] 行いますか? (山札残り{len(turnPlayer.deck)}枚)\nreshuffle 0:しない 1:する\n", ["reshuffle"], [[0, 1]])
     if(tokens[1] == 1):
         cp.inflictDamage.life(turnPlayer, 1)
         turnPlayer.reshuffle()
@@ -143,9 +143,9 @@ def overallProcessing(firstID = None, tutorial = False):
     secondID = (firstID + 1) % 2
 
     # 手札と集中
-    # for i in range(3):
-    #     player_0.drawCard()
-    #     player_1.drawCard()
+    for i in range(3):
+        player_0.drawCard()
+        player_1.drawCard()
     players[secondID].chgVigor(1)
 
     bd.outputBoard(areas)
