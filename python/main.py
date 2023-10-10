@@ -24,6 +24,7 @@ def startPhase(turnID):
     # カードを2枚引く
     for i in range(2):
         cp.draw(turnPlayer)
+
 # 終了フェイズ
 def endPhase(turnID):
     turnPlayer = players[turnID]
@@ -37,9 +38,8 @@ def endPhase(turnID):
         turnPlayer.moveCardN(tokens[1], 3)
     
     # フラグリセット
-    turnPlayer.flagThroughout = False
-    turnPlayer.flagUsedBasic = False
-    turnPlayer.flagUsedCard = False
+    turnPlayer.resetTurnFlag()
+    otherPlayer.resetTurnFlag()
 
 # メインフェイズ
 def mainPhase(turnID):
@@ -86,8 +86,8 @@ def mainPhase(turnID):
             myp.printLog("ターンエンド")
             break
 # 敗北処理
-def lose(playerID):
-    myp.printLog(f"player {playerID}: LOSE")
+def lose(player):
+    myp.printLog(f"{player.name}: LOSE")
     exit()
 
 # ----- 定義 -----

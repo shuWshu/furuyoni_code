@@ -92,7 +92,6 @@ class Player:
             myp.printMove(f"「{self.cardListS[id][0].name}」 {cardStateNames[prevState]} → {cardStateNames[afterState]}")
         else:
             myp.printDebag(f"「{self.cardListS[id][0].name}」の状態は変化しなかった")
-
     # ドロー処理
     # 返値: 成功なら引いたカードid, 失敗なら-1
     # 2023/09/09 処理をmoveCardNに変更
@@ -102,6 +101,11 @@ class Player:
         drawn = self.deck[0]
         self.moveCardN(drawn, 1)
         return drawn
+    #ターンフラグリセット
+    def resetTurnFlag(self):
+        self.flagThroughout = False
+        self.flagUsedBasic = False
+        self.flagUsedCard = False
 
 # 各領域カード表示
 def outputPlayerCard(player):
